@@ -5,8 +5,8 @@ export type Flight = {
     flightNo: string
     origin: string
     destination: string
-    departure: Date
-    arrival: Date
+    departureDateTime: Date
+    arrivalDateTime: Date
     capacity: number
 }
 

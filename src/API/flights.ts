@@ -7,9 +7,14 @@ export type Flight = {
     destination: string
     departureDateTime: Date
     arrivalDateTime: Date
-    capacity: number
+    aircraftID: number
+    coachSeatPrice: number
+    businessSeatPrice: number
 }
 
 
 export const getFlights = (accessToken: string):Promise<Flight[]> =>
     authorizedGetAsync<Flight[]>(accessToken, 'http://localhost:8080/api/Flight/getFlights')
+
+export const getFlightByID = (accessToken: string, id: number):Promise<Flight> =>
+    authorizedGetAsync<Flight>(accessToken, `http://localhost:8080/api/Booking/getFlight/${id}`)

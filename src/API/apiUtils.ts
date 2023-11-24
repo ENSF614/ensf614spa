@@ -14,12 +14,11 @@ enum Verb {
  * @param {any} message (Optional) The object to go in the request body as JSON.
  * @param {string} contentType (Optional) The content type
  */
-const authorizedActionAsync = async <T>(method: Verb, accessToken: string, url: string, message?: any, contentType = 'application/json'): Promise<T> => {
+const authorizedActionAsync = async <T>(method: Verb, url: string, message?: any, contentType = 'application/json'): Promise<T> => {
     // console.log(`Verb ${method} - url - ${url}`)
     return fetch(url, {
         method,
         headers: {
-            Authorization: `Bearer ${accessToken}`,
             'Content-Type': `${contentType}; charset=utf-8`,
             'Accept-Language': navigator.language,
         },
@@ -54,7 +53,7 @@ const authorizedActionAsync = async <T>(method: Verb, accessToken: string, url: 
  * @param url The URL.
  * @returns
  */
-export const authorizedDeleteAsync = async <T>(accessToken: string, url: string): Promise<T> => authorizedActionAsync<T>(Verb.DELETE, accessToken, url)
+export const authorizedDeleteAsync = async <T>(url: string): Promise<T> => authorizedActionAsync<T>(Verb.DELETE, url)
 
 /**
  * A standard GET request.
@@ -62,7 +61,7 @@ export const authorizedDeleteAsync = async <T>(accessToken: string, url: string)
  * @param {string} url The URL.
  * @returns
  */
-export const authorizedGetAsync = async <T>(accessToken: string, url: string): Promise<T> => authorizedActionAsync<T>(Verb.GET, accessToken, url)
+export const authorizedGetAsync = async <T>(url: string): Promise<T> => authorizedActionAsync<T>(Verb.GET, url)
 
 /**
  * A standard POST request.
@@ -72,8 +71,8 @@ export const authorizedGetAsync = async <T>(accessToken: string, url: string): P
  * @param contentType The POST content type (default JSON)
  * @returns
  */
-export const authorizedPostAsync = async <T>(accessToken: string, url: string, message?: unknown, contentType?: string): Promise<T> =>
-    authorizedActionAsync<T>(Verb.POST, accessToken, url, message, contentType)
+export const authorizedPostAsync = async <T>(url: string, message?: unknown, contentType?: string): Promise<T> =>
+    authorizedActionAsync<T>(Verb.POST, url, message, contentType)
 
 /**
  * A standard PATCH request.
@@ -83,8 +82,8 @@ export const authorizedPostAsync = async <T>(accessToken: string, url: string, m
  * @param contentType The PATCH content type (default JSON)
  * @returns
  */
-export const _authorizedPatchAsync = async <T>(accessToken: string, url: string, message?: unknown, contentType?: string): Promise<T> =>
-    authorizedActionAsync<T>(Verb.PATCH, accessToken, url, message, contentType)
+export const _authorizedPatchAsync = async <T>(url: string, message?: unknown, contentType?: string): Promise<T> =>
+    authorizedActionAsync<T>(Verb.PATCH, url, message, contentType)
 
 /**
  * A standard PUT request.
@@ -94,5 +93,5 @@ export const _authorizedPatchAsync = async <T>(accessToken: string, url: string,
  * @param contentType The PUT content type (default JSON)
  * @returns
  */
-export const authorizedPutAsync = async <T>(accessToken: string, url: string, message?: unknown, contentType?: string): Promise<T> =>
-    authorizedActionAsync<T>(Verb.PUT, accessToken, url, message, contentType)
+export const authorizedPutAsync = async <T>(url: string, message?: unknown, contentType?: string): Promise<T> =>
+    authorizedActionAsync<T>(Verb.PUT, url, message, contentType)

@@ -9,7 +9,7 @@ const Flights = () => {
     const [flights , setFlights] = useState<Flight[]>()
 
     const loadFlights = () => {
-        getFlights("")
+        getFlights()
             .then((response) => {
                 console.log(response)
                 setFlights(response)

@@ -15,6 +15,3 @@ export type Flight = {
 
 export const getFlights = (accessToken: string):Promise<Flight[]> =>
     authorizedGetAsync<Flight[]>(accessToken, 'http://localhost:8080/api/Flight/getFlights')
-
-export const getFlightByID = (accessToken: string, id: number):Promise<Flight> =>
-    authorizedGetAsync<Flight>(accessToken, `http://localhost:8080/api/Booking/getFlight/${id}`)

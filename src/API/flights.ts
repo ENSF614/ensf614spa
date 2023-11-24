@@ -11,5 +11,5 @@ export type Flight = {
 }
 
 
-export const getFlights = (accessToken: string):Promise<Flight[]> =>
-    authorizedGetAsync<Flight[]>(accessToken, 'http://localhost:8080/api/Flight/getFlights')
+export const getFlights = ():Promise<Flight[]> =>
+    authorizedGetAsync<Flight[]>('http://localhost:8080/api/Flight/getFlights')

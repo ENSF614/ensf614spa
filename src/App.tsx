@@ -7,6 +7,8 @@ import Home from "./Components/Home";
 import Booking from "./Components/Booking";
 import 'bootstrap/dist/css/bootstrap.css'
 import BuyTicket from './Components/BuyTicket';
+import Users from "./Components/User/Users";
+import UserEdit from "./Components/User/UserEdit";
 
 
 
@@ -15,8 +17,10 @@ const App = () => {
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/Flights" Component={Flights} />
-        <Route path="/Booking" Component={Booking} />\
+        <Route path="/Booking" Component={Booking} />
         <Route path="/BuyTicket" Component={BuyTicket} />
+        <Route path="/Users" Component={Users}/>
+        <Route path="/User/:userId" Component={UserEdit}/>
       </Routes>
 
   );

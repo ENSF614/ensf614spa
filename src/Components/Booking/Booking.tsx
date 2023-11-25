@@ -14,7 +14,6 @@ const Booking = ({
     children}:Props) => {
 
     const [seats, setSeats] = useState<Seat[]>()
-    const [seatState, setSeatState] = useState<Seat>();
 
     const loadSeats = () => {
         getSeats(1)
@@ -55,6 +54,8 @@ const Booking = ({
             }
     }
     
+    const [seatState, setSeatState] = useState<Seat>();
+
     const handleConfirmSeat = (seat: Seat) => {
         setSeatState(seat);
         console.log(seat);
@@ -84,7 +85,7 @@ const Booking = ({
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => console.log("onClick")} 
+                                            onClick={() => setSeatModalShow(true)} 
                                             onSeatClick={handleConfirmSeat}
                                             />
                                     </div>
@@ -98,7 +99,7 @@ const Booking = ({
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => console.log("onClick")} 
+                                            onClick={() => setSeatModalShow(true)} 
                                             onSeatClick={handleConfirmSeat}
                                             />
                                     </div>

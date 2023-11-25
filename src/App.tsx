@@ -4,9 +4,9 @@ import './App.css';
 import { Routes, Route} from 'react-router-dom';
 import Flights from "./Components/Flights";
 import Home from "./Components/Home";
-import Booking from "./Components/Booking";
+import Booking from "./Components/Booking/Booking";
 import 'bootstrap/dist/css/bootstrap.css'
-import BuyTicket from './Components/BuyTicket';
+import BuyTicket from './Components/Booking/BuyTicket';
 import Users from "./Components/User/Users";
 import UserEdit from "./Components/User/UserEdit";
 

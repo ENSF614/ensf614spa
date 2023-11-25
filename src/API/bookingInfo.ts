@@ -8,5 +8,5 @@ export type BookingInfo = {
     numCols: number
 }
 
-export const getBookingInfo = (accesToken: string, flightID: number):Promise<BookingInfo> =>
-    authorizedGetAsync<BookingInfo>(accesToken, `http://localhost:8080/api/Booking/getBookingInfo/${flightID}`)
+export const getBookingInfo = (flightID: number):Promise<BookingInfo> =>
+    authorizedGetAsync<BookingInfo>(`http://localhost:8080/api/Booking/getBookingInfo/${flightID}`)

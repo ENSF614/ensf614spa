@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { BookedSeats, getBookedSeats } from "../API/bookedSeats";
-import { BookingInfo, getBookingInfo } from "../API/bookingInfo";
-import PageLayout from "./PageLayout";
-import Button from 'react-bootstrap/Button';
+import { Seat, getSeats } from "../../API/Seats";
+import { BookingInfo, getBookingInfo } from "../../API/bookingInfo";
+import PageLayout from "../PageLayout";
 import ConfirmSeatModal from "./ConfirmSeatModal";
+import SeatButton from "./SeatButton";
 
 const seatFig: string = "airplaneseat.png";
 const seatModal: string = "/SeatModal";
@@ -16,13 +16,13 @@ interface Props{
 const Booking = ({
     children}:Props) => {
 
-    const [bookedSeats, setBookedSeats] = useState<BookedSeats[]>()
+    const [seats, setSeats] = useState<Seat[]>()
 
-    const loadBookedSeats = () => {
-        getBookedSeats("", 1)
+    const loadSeats = () => {
+        getSeats(1)
             .then((response) => {
                 console.log(response)
-                setBookedSeats(response)
+                setSeats(response)
             })
             .catch((error) => {
                 console.log(error)
@@ -30,13 +30,13 @@ const Booking = ({
     }
 
     useEffect(() => {
-        loadBookedSeats()
+        loadSeats()
     }, [])
 
     const [bookingInfo, setBookingInfo] = useState<BookingInfo>()
 
     const loadBookingInfo = () => {
-        getBookingInfo("", 1)
+        getBookingInfo(1)
             .then((response) => {
                 console.log(response)
                 setBookingInfo(response)
@@ -50,8 +50,24 @@ const Booking = ({
         loadBookingInfo()
     }, [])
 
+    function* createSeatIterator<Seat>(seats: Seat[] | undefined) {
+        if(seats)
+            for(const seat of seats){
+                yield seat;
+            }
+    }
+
+    const [seatState, setSeatState] = useState<Seat>();
+    
+    const handleConfirmSeat = (seat: Seat) => {
+        setSeatState(seat);
+        console.log(seat);
+        setSeatModalShow(true);
+    }
+
     const [seatModalShow, setSeatModalShow] = useState(false);
     const navigate = useNavigate();
+    const seatIterator = createSeatIterator(seats);
 
     return(
         <PageLayout>
@@ -64,26 +80,31 @@ const Booking = ({
             </div>
 
             <div className="container">
-                {bookingInfo && [...Array(bookingInfo.numRows)].map((_, rowIndex) =>(
+                {bookingInfo && [...Array(bookingInfo.numRows-1)].map((_, rowIndex) =>(
                     <div className="row mb-3">
                         <div className="col">
                             <div className="row">
                                 {[...Array(bookingInfo.numCols)].map((_, colIndex) =>(
-                                    <div className="col">
-                                        <Button variant="primary" onClick={() => setSeatModalShow(true)}>
-                                            <img src={seatFig} width="42" height="42"></img>
-                                        </Button>
+                                    <div className="col-md-3">
+                                        <SeatButton 
+                                            seat={seatIterator.next().value as Seat} 
+                                            onClick={() => setSeatModalShow(true)} 
+                                            onSeatClick={handleConfirmSeat}
+                                            />
                                     </div>
                                 ))}
                             </div>
                         </div>
+                        <div className="col-md-1" />
                         <div className="col">
                             <div className="row">
                                 {[...Array(bookingInfo.numCols)].map((_, colIndex) =>(
-                                    <div className="col">
-                                        <a href={seatModal}>
-                                            <img src={seatFig} width="42" height="42"></img>
-                                        </a>
+                                    <div className="col-md-3">
+                                        <SeatButton 
+                                            seat={seatIterator.next().value as Seat} 
+                                            onClick={() => setSeatModalShow(true)} 
+                                            onSeatClick={handleConfirmSeat}
+                                            />
                                     </div>
                                 ))}
                             </div>
@@ -95,7 +116,7 @@ const Booking = ({
                 <ConfirmSeatModal
                     show={seatModalShow}
                     onHide={() => setSeatModalShow(false)}
-                    onConfirm={() => navigate("/BuyTicket")}
+                    onConfirm={() => navigate("/BuyTicket", {state: {seat: seatState}})}
                 />
             </div>    
         </PageLayout>

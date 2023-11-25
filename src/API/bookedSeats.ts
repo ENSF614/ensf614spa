@@ -5,5 +5,16 @@ export type BookedSeats = {
    seatCol: string 
 }
 
-export const getBookedSeats = (accessToken: string, flightID: number):Promise<BookedSeats[]> =>
-    authorizedGetAsync<BookedSeats[]>(accessToken, `http://localhost:8080/api/Booking/getBookedSeats/${flightID}`)
+export enum colLetters {
+   A,
+   B,
+   C,
+   D,
+   E,
+   F,
+   G,
+   H
+}
+
+export const getBookedSeats = (flightID: number):Promise<BookedSeats[]> =>
+    authorizedGetAsync<BookedSeats[]>(`http://localhost:8080/api/Booking/getBookedSeats/${flightID}`)

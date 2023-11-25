@@ -96,9 +96,9 @@ const BillingDetails = (props: BillingDetailsProps) => {
                     </div>
                 </div>
                 
-                <div className="d-grid gap-2 col-8 mx-auto">
+                <div className="d-grid gap-2 col-6 mx-auto">
                 <button type="button" className="btn btn-primary btn-lg shadow mb-3">
-                    CONTINUE TO CHECKOUT
+                    CHECKOUT
                 </button>
                 </div>
             </div>     
@@ -151,7 +151,7 @@ const BillingSummary = (props: BillingSummaryProps) => {
     );
 }
 
-const BuyTicket = () => {
+const PaymentForm = () => {
 
     const { state } = useLocation()
     const [cancelInsurance, setCancelInsurance] = useState(false)
@@ -176,4 +176,4 @@ const BuyTicket = () => {
     )
 }
 
-export default BuyTicket;
+export default PaymentForm;

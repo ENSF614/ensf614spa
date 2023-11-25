@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap"
 import { isPropertySignature } from "typescript";
-import { Seat } from "../../API/Seats";
+import { Seat } from "../../API/seats";
 
 interface Props{
     seat?: Seat

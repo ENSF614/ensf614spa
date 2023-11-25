@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { Seat, getSeats } from "../../API/Seats";
+import { Seat, getSeats } from "../../API/seats";
 import { BookingInfo, getBookingInfo } from "../../API/bookingInfo";
 import PageLayout from "../PageLayout";
 import ConfirmSeatModal from "./ConfirmSeatModal";
@@ -10,7 +10,7 @@ interface Props{
     children?: any;
 }
 
-const Booking = ({
+const SeatMap = ({
     children}:Props) => {
 
     const [seats, setSeats] = useState<Seat[]>()
@@ -114,11 +114,11 @@ const Booking = ({
                     show={seatModalShow}
                     seat={seatState}
                     onHide={() => setSeatModalShow(false)}
-                    onConfirm={() => navigate("/BuyTicket", {state: {seat: seatState}})}
+                    onConfirm={() => navigate("/PaymentForm", {state: {seat: seatState}})}
                 />
             </div>    
         </PageLayout>
     );
 }
 
-export default Booking;
+export default SeatMap;

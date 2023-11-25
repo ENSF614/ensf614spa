@@ -6,9 +6,6 @@ import PageLayout from "../PageLayout";
 import ConfirmSeatModal from "./ConfirmSeatModal";
 import SeatButton from "./SeatButton";
 
-const seatFig: string = "airplaneseat.png";
-const seatModal: string = "/SeatModal";
-
 interface Props{
     children?: any;
 }
@@ -17,6 +14,7 @@ const Booking = ({
     children}:Props) => {
 
     const [seats, setSeats] = useState<Seat[]>()
+    const [seatState, setSeatState] = useState<Seat>();
 
     const loadSeats = () => {
         getSeats(1)
@@ -56,8 +54,6 @@ const Booking = ({
                 yield seat;
             }
     }
-
-    const [seatState, setSeatState] = useState<Seat>();
     
     const handleConfirmSeat = (seat: Seat) => {
         setSeatState(seat);
@@ -88,7 +84,7 @@ const Booking = ({
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => setSeatModalShow(true)} 
+                                            onClick={() => console.log("onClick")} 
                                             onSeatClick={handleConfirmSeat}
                                             />
                                     </div>
@@ -102,7 +98,7 @@ const Booking = ({
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => setSeatModalShow(true)} 
+                                            onClick={() => console.log("onClick")} 
                                             onSeatClick={handleConfirmSeat}
                                             />
                                     </div>
@@ -115,6 +111,7 @@ const Booking = ({
 
                 <ConfirmSeatModal
                     show={seatModalShow}
+                    seat={seatState}
                     onHide={() => setSeatModalShow(false)}
                     onConfirm={() => navigate("/BuyTicket", {state: {seat: seatState}})}
                 />

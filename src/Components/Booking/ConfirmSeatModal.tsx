@@ -2,6 +2,15 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 function ConfirmSeatModal(props: any) {
+
+    console.log(props.seat)
+    
+    const getSeatClass = (businessClass: boolean) => {
+      if(businessClass)
+        return "business"
+      return "economy"
+    }
+
     return (
       <Modal
         {...props}
@@ -15,7 +24,9 @@ function ConfirmSeatModal(props: any) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h4>Select Seat add in seat row col here</h4>
+          <h4>
+            Selected seat {props.seat?.seatRow}{props.seat?.seatCol} in {getSeatClass(props.seat?.businessClass)} class
+          </h4>
           <p>
             Do you want to proceed to checkout?
           </p>

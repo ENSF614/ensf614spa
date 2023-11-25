@@ -85,8 +85,7 @@ const SeatMap = ({
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => setSeatModalShow(true)} 
-                                            onSeatClick={handleConfirmSeat}
+                                            onClick={handleConfirmSeat}
                                             />
                                     </div>
                                 ))}
@@ -99,8 +98,7 @@ const SeatMap = ({
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => setSeatModalShow(true)} 
-                                            onSeatClick={handleConfirmSeat}
+                                            onClick={handleConfirmSeat}
                                             />
                                     </div>
                                 ))}

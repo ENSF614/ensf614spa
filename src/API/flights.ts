@@ -7,7 +7,9 @@ export type Flight = {
     destination: string
     departureDateTime: Date
     arrivalDateTime: Date
-    capacity: number
+    aircraftID: number
+    coachSeatPrice: number
+    businessSeatPrice: number
 }
 
 

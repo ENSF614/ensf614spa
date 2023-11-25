@@ -15,6 +15,7 @@ const PageLayout = ({
                     <Nav className='me-auto'>
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href='/Flights'>Flights</Nav.Link>
+                        <Nav.Link href='/SeatMap'>SeatMap</Nav.Link>
                         <NavDropdown title="Someshit" id="navdropdown">
                             <NavDropdown.Item href="#">Book a Flight</NavDropdown.Item>
                             <NavDropdown.Item href="#">Check Flight Status</NavDropdown.Item>

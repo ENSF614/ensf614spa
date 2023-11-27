@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Seat, getSeats } from "../../API/seats";
 import { BookingInfo, getBookingInfo } from "../../API/bookingInfo";
 import PageLayout from "../PageLayout";
-import ConfirmSeatModal from "./ConfirmSeatModal";
+import ConfirmSeatModal from "../Payment/ConfirmSeatModal";
 import SeatButton from "./SeatButton";
 
 interface Props{

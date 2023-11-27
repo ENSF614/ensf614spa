@@ -16,6 +16,9 @@ function PaymentConfirmedModal(props: any) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <h4>
+            Thank you for booking with ENSF614 Airlines!
+          </h4>
           <p>
             Confirmation email and ticket have been emailed to 
             USER EMAIL HERE.

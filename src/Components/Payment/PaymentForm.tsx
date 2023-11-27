@@ -4,6 +4,9 @@ import { CreditCard, checkCard } from "../../API/creditCard"
 import InvalidCardModal from "./invalidCardModal";
 import PaymentConfirmedModal from "./paymentConfirmedModal";
 import { useNavigate } from "react-router-dom";
+import { Seat } from "../../API/seats";
+import { Booking, putBooking } from "../../API/booking";
+import InvalidBookingModal from "./invalidBookingModal";
 
 interface BillingDetailsProps {
     insuranceState: any
@@ -14,8 +17,10 @@ interface BillingDetailsProps {
     setCardNumber: (num: string) => void
     setCardExpiry: (num: string) => void
     setCardCVV: (num: string) => void
-    setShowInvalidModal: (bool: boolean) => void
+    setShowInvalidCard: (bool: boolean) => void
     setShowConfirmedPayment: (bool: boolean) => void
+    passBooking: () => void
+    setCardType: (card: string) => void
 }
 
 const PaymentSection = (props: BillingDetailsProps) => {
@@ -25,13 +30,17 @@ const PaymentSection = (props: BillingDetailsProps) => {
         <h5 className="mb-4">Payment</h5>
 
         <div className="form-check">
-            <input className="form-check-input" type="radio" name="paymentRadio" id="credit" defaultChecked />
+            <input className="form-check-input" type="radio" 
+                   name="paymentRadio" id="credit" 
+                   onClick={e => props.setCardType("credit")} defaultChecked />
             <label className="form-check-label" htmlFor="credit">
                 Credit card
             </label>
         </div>
         <div className="form-check mb-4">
-            <input className="form-check-input" type="radio" name="paymentRadio" id="debit" />
+            <input className="form-check-input" type="radio" 
+                   name="paymentRadio" id="debit"
+                   onClick={e => props.setCardType("debit")} />
             <label className="form-check-label" htmlFor="debit">
                 Debit card
             </label>
@@ -169,13 +178,12 @@ const BillingDetailsCard = (props: BillingDetailsProps) => {
             cardCVV: props.cardCVV
         })
             .then((response) => {
-                console.log("validate card")
                 console.log(response)
                 if(response) {
-                    setCardValidity(true);
-                    props.setShowConfirmedPayment(true)
+                    setCardValidity(true)
+                    props.passBooking()
                 } else {
-                    props.setShowInvalidModal(true)
+                    props.setShowInvalidCard(true)
                 }
                     
             })
@@ -261,16 +269,47 @@ const BillingSummaryCard = (props: BillingSummaryProps) => {
 const PaymentForm = () => {
 
     const { state } = useLocation()
-    const [showInvalidModal, setShowInvalidModal] = useState(false)
+    const [showInvalidCard, setShowInvalidCard] = useState(false)
     const [showConfirmedPayment, setShowConfirmedPayment] = useState(false)
+    const [showInvalidBooking, setShowInvalidBooking] = useState(false)
     const [cancelInsurance, setCancelInsurance] = useState(false)
     const [cardNumber, setCardNumber] = useState<string>("")
     const [cardExpiry, setCardExpiry] = useState<string>("")
     const [cardCVV, setCardCVV] = useState<string>("")
+    const [cardType, setCardType] = useState<string>("credit")
 
     const seat = state?.seat
     const navigate = useNavigate()
-    console.log("PaymentForm")
+
+    const getSeatType = () => {
+        if(seat.businessClass) return "business"
+        return "economy"
+    }
+
+    const passBooking = () => {
+        putBooking({
+            userID: 1,
+            flightID: seat.flightID,
+            cancelInsurance: cancelInsurance,
+            paid: true,
+            payMethod: cardType,
+            seatClass: getSeatType(),
+            seatRow: seat.seatRow,
+            seatCol: seat.seatCol
+        })
+            .then((response) => {
+                console.log(response)
+                if(response) {
+                    setShowConfirmedPayment(true)
+                } else {
+                    setShowInvalidBooking(true)
+                }
+                    
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 
     return(
         <>
@@ -286,8 +325,10 @@ const PaymentForm = () => {
                         setCardNumber={setCardNumber}
                         setCardExpiry={setCardExpiry}
                         setCardCVV={setCardCVV}
-                        setShowInvalidModal={setShowInvalidModal}
+                        setShowInvalidCard={setShowInvalidCard}
                         setShowConfirmedPayment={setShowConfirmedPayment}
+                        passBooking={passBooking}
+                        setCardType={setCardType}
                     />
                 </div>
 
@@ -298,11 +339,15 @@ const PaymentForm = () => {
         </div>
         
         <InvalidCardModal 
-            show={showInvalidModal}
-            onHide={() => setShowInvalidModal(false)}    
+            show={showInvalidCard}
+            onHide={() => setShowInvalidCard(false)}    
         />
         <PaymentConfirmedModal 
             show={showConfirmedPayment}
+            onHide={() => navigate("/")}
+        />
+        <InvalidBookingModal 
+            show={showInvalidBooking}
             onHide={() => navigate("/")}
         />
         </>

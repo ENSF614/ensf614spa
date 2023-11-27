@@ -1,11 +1,9 @@
 import { Button } from "react-bootstrap"
-import { isPropertySignature } from "typescript";
 import { Seat } from "../../API/seats";
 
 interface Props{
     seat?: Seat
-    onClick: () => void
-    onSeatClick: (seat: Seat) => void
+    onClick: (seat: Seat) => void
 }
 
 const SeatButton = (props: Props) => {
@@ -15,13 +13,12 @@ const SeatButton = (props: Props) => {
     if(props.seat?.booked) buttonType="secondary disabled";
 
     const handleClick = () => {
-        props.onSeatClick(props.seat as Seat)
-        props.onClick()
+        props.onClick(props.seat as Seat)
     }
 
     return(
         <>
-        <Button variant={buttonType} onClick={handleClick} >
+        <Button variant={buttonType} onClick={handleClick} style={{height: "9vh", width: "6vw"}}>
             {`${props.seat?.seatRow}${props.seat?.seatCol}`}
         </Button>
         </>

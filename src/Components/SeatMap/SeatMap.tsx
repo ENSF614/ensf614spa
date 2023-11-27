@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Seat, getSeats } from "../../API/seats";
 import { BookingInfo, getBookingInfo } from "../../API/bookingInfo";
 import PageLayout from "../PageLayout";
-import ConfirmSeatModal from "./ConfirmSeatModal";
+import ConfirmSeatModal from "../Payment/ConfirmSeatModal";
 import SeatButton from "./SeatButton";
 
 interface Props{
@@ -76,17 +76,16 @@ const SeatMap = ({
                 </div>
             </div>
 
-            <div className="container">
+            <div className="container p-3 bg-secondary bg-opacity-75">
                 {bookingInfo && [...Array(bookingInfo.numRows-1)].map((_, rowIndex) =>(
                     <div className="row mb-3">
                         <div className="col">
-                            <div className="row">
+                            <div className="row justify-content-end">
                                 {[...Array(bookingInfo.numCols)].map((_, colIndex) =>(
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => setSeatModalShow(true)} 
-                                            onSeatClick={handleConfirmSeat}
+                                            onClick={handleConfirmSeat}
                                             />
                                     </div>
                                 ))}
@@ -94,13 +93,12 @@ const SeatMap = ({
                         </div>
                         <div className="col-md-1" />
                         <div className="col">
-                            <div className="row">
+                            <div className="row justify-content-left">
                                 {[...Array(bookingInfo.numCols)].map((_, colIndex) =>(
                                     <div className="col-md-3">
                                         <SeatButton 
                                             seat={seatIterator.next().value as Seat} 
-                                            onClick={() => setSeatModalShow(true)} 
-                                            onSeatClick={handleConfirmSeat}
+                                            onClick={handleConfirmSeat}
                                             />
                                     </div>
                                 ))}

@@ -1,5 +1,4 @@
 import { Button } from "react-bootstrap"
-import { isPropertySignature } from "typescript";
 import { Seat } from "../../API/seats";
 
 interface Props{
@@ -19,7 +18,7 @@ const SeatButton = (props: Props) => {
 
     return(
         <>
-        <Button variant={buttonType} onClick={handleClick} >
+        <Button variant={buttonType} onClick={handleClick} style={{height: "9vh", width: "6vw"}}>
             {`${props.seat?.seatRow}${props.seat?.seatCol}`}
         </Button>
         </>

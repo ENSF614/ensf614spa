@@ -76,11 +76,11 @@ const SeatMap = ({
                 </div>
             </div>
 
-            <div className="container">
+            <div className="container p-3 bg-secondary bg-opacity-75">
                 {bookingInfo && [...Array(bookingInfo.numRows-1)].map((_, rowIndex) =>(
                     <div className="row mb-3">
                         <div className="col">
-                            <div className="row">
+                            <div className="row justify-content-end">
                                 {[...Array(bookingInfo.numCols)].map((_, colIndex) =>(
                                     <div className="col-md-3">
                                         <SeatButton 
@@ -93,7 +93,7 @@ const SeatMap = ({
                         </div>
                         <div className="col-md-1" />
                         <div className="col">
-                            <div className="row">
+                            <div className="row justify-content-left">
                                 {[...Array(bookingInfo.numCols)].map((_, colIndex) =>(
                                     <div className="col-md-3">
                                         <SeatButton 

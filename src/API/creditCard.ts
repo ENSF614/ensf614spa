@@ -6,13 +6,5 @@ export type CreditCard = {
     cardCVV: string | undefined
 }
 
-const card: CreditCard = {
-    cardNumber: "1",
-    cardExpiry: "1",
-    cardCVV: "1"
-}
-
-console.log(card)
-
 export const checkCard = (message: CreditCard):Promise<boolean> =>
     authorizedPostAsync<boolean>('http://localhost:8080/api/Booking/validateCard', message)

@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { CreditCard, checkCard } from "../../API/creditCard"
+import InvalidCardModal from "./invalidCardModal";
+import PaymentConfirmedModal from "./paymentConfirmedModal";
+import { useNavigate } from "react-router-dom";
 
 interface BillingDetailsProps {
     insuranceState: any
-    cardNumber: string | undefined
-    cardExpiry: string | undefined
-    cardCVV: string | undefined
+    cardNumber: string
+    cardExpiry: string
+    cardCVV: string
     setInsurance: (bool: boolean) => void
     setCardNumber: (num: string) => void
     setCardExpiry: (num: string) => void
     setCardCVV: (num: string) => void
+    setShowInvalidModal: (bool: boolean) => void
+    setShowConfirmedPayment: (bool: boolean) => void
 }
 
 const PaymentSection = (props: BillingDetailsProps) => {
@@ -166,8 +171,13 @@ const BillingDetailsCard = (props: BillingDetailsProps) => {
             .then((response) => {
                 console.log("validate card")
                 console.log(response)
-                if(response) 
+                if(response) {
                     setCardValidity(true);
+                    props.setShowConfirmedPayment(true)
+                } else {
+                    props.setShowInvalidModal(true)
+                }
+                    
             })
             .catch((error) => {
                 console.log(error)
@@ -251,15 +261,19 @@ const BillingSummaryCard = (props: BillingSummaryProps) => {
 const PaymentForm = () => {
 
     const { state } = useLocation()
+    const [showInvalidModal, setShowInvalidModal] = useState(false)
+    const [showConfirmedPayment, setShowConfirmedPayment] = useState(false)
     const [cancelInsurance, setCancelInsurance] = useState(false)
-    const [cardNumber, setCardNumber] = useState<string>()
-    const [cardExpiry, setCardExpiry] = useState<string>()
-    const [cardCVV, setCardCVV] = useState<string>()
+    const [cardNumber, setCardNumber] = useState<string>("")
+    const [cardExpiry, setCardExpiry] = useState<string>("")
+    const [cardCVV, setCardCVV] = useState<string>("")
 
     const seat = state?.seat
+    const navigate = useNavigate()
     console.log("PaymentForm")
 
     return(
+        <>
         <div className="container py-5">
             <div className="row">
                 <div className="col-md-8">
@@ -272,6 +286,8 @@ const PaymentForm = () => {
                         setCardNumber={setCardNumber}
                         setCardExpiry={setCardExpiry}
                         setCardCVV={setCardCVV}
+                        setShowInvalidModal={setShowInvalidModal}
+                        setShowConfirmedPayment={setShowConfirmedPayment}
                     />
                 </div>
 
@@ -280,7 +296,17 @@ const PaymentForm = () => {
                 </div>
             </div>
         </div>
-    )
+        
+        <InvalidCardModal 
+            show={showInvalidModal}
+            onHide={() => setShowInvalidModal(false)}    
+        />
+        <PaymentConfirmedModal 
+            show={showConfirmedPayment}
+            onHide={() => navigate("/")}
+        />
+        </>
+    );
 }
 
 export default PaymentForm;

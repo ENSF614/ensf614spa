@@ -1,4 +1,5 @@
 import {authorizedGetAsync} from "./apiUtils";
+import {UserRole} from "../Auth/authTypes";
 
 export type User = {
     userID: string
@@ -12,16 +13,9 @@ export type User = {
     phoneNumber: string
     companionPass: boolean
     loungePass: boolean
-    role: Role
+    role: UserRole
 }
 
-export enum Role {
-    User = 'User',
-    RegisteredUser = "RegisteredUser",
-    TravelAgent = "TravelAgent",
-    Staff = "Staff",
-    Admin = "Admin"
-}
 
 
 export const getUsers = ():Promise<User[]> =>

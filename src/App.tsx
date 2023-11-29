@@ -9,19 +9,26 @@ import 'bootstrap/dist/css/bootstrap.css'
 import PaymentForm from './Components/Payment/PaymentForm';
 import Users from "./Components/User/Users";
 import UserEdit from "./Components/User/UserEdit";
+import AuthProvider from "./Auth/AuthProvider";
+import PrivateRoute from "./Auth/PrivateRoute";
+import {UserRoles} from "./Auth/authTypes";
 
 
 
 const App = () => {
   return (
-      <Routes>
-        <Route path="/" Component={Home} />
-        <Route path="/Flights" Component={Flights} />
-        <Route path="/SeatMap" Component={SeatMap} />
-        <Route path="/PaymentForm" Component={PaymentForm} />
-        <Route path="/Users" Component={Users}/>
-        <Route path="/User/:userId" Component={UserEdit}/>
-      </Routes>
+      <AuthProvider>
+          <Routes>
+              <Route path="/" Component={Home} />
+              <Route path="/login" Component={Home} />
+              <Route path="/Flights" Component={Flights} />
+              <Route path="/SeatMap" Component={SeatMap} />
+              <Route path="/PaymentForm" Component={PaymentForm} />
+              <PrivateRoute path="/Users" element={<Users/>} userRoles={UserRoles.Admin}/>
+              <PrivateRoute path="/User/:userId" element={<UserEdit/>} userRoles={UserRoles.UserOrBetter}/>
+          </Routes>
+      </AuthProvider>
+
 
   );
 }

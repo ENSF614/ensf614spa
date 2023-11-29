@@ -1,21 +1,46 @@
-import {UserRole} from "./authTypes";
+import React from 'react';
+import { Route, Navigate, useLocation, RouteProps } from 'react-router-dom';
+import { useAuth } from './AuthProvider'; // Adjust the import path
+import { hasAnyRole } from './claimUtils';
+import {UserRole} from "./authTypes"; // Adjust the import path
 
-const PrivateRoute = () =>{
+type Props = {
+    element: React.ReactElement;
+    userRoles: UserRole[];
+};
 
+const PrivateRoute: React.FC<Props & RouteProps> = ({
+        element,
+        userRoles,
+        ...rest
+    }) => {
+    const { user } = useAuth();
+    const location = useLocation();
 
-    // Our authorization states.
-    const NOT_DETERMINED = 0
-    const AUTHORIZED = 1
-    const NOT_AUTHORIZED = 2
+    const isLoggedIn = (): boolean => {
+        return user !== undefined;
+    };
 
-    // Whether the user is authorized (which will be determined on mount).  Default: Not yet determined.
-    let authorizationState = NOT_DETERMINED
-    // The allowed roles
-    let anyOfRoles: UserRole[] | undefined = undefined
+    const isAuthorized = (): boolean => {
+        return isLoggedIn() && hasAnyRole(user, userRoles);
+    };
 
-    return(
-        <div></div>
-    )
-}
+    return (
+        <Route
+            {...rest}
+            element={
+                isLoggedIn() ? (
+                    isAuthorized() ? (
+                        element
+                    ) : (
+                        <h1>Not Authorized</h1>
+                    )
+                ) : (
+                    <Navigate to="/login" state={{ from: location }} replace />
+                )
+            }
+        />
+    );
+};
 
 export default PrivateRoute;

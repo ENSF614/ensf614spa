@@ -19,6 +19,19 @@ const AuthProvider:React.FC<Props> = ({children}:Props) => {
 
     const [user, setUser] = useState<User|undefined>(undefined)
 
+    // Load initial data from storage when the app loads
+    useEffect(() => {
+        const data = localStorage.getItem('fakeAirlineUserData');
+        if (data) {
+            setUser(JSON.parse(data));
+        }
+    }, []);
+
+    // Save to local storage when userData changes
+    useEffect(() => {
+        localStorage.setItem('fakeAirlineUserData', JSON.stringify(user));
+    }, [user]);
+
     const login = useCallback(async () => {
         // have login logic here
     },[])

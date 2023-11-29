@@ -16,12 +16,11 @@ export type User = {
 }
 
 export enum Role {
-    Anonoymous,
-    User,
-    RegisteredUser,
-    TravelAgent,
-    AirlineEmployee,
-    Admin
+    User = 'User',
+    RegisteredUser = "RegisteredUser",
+    TravelAgent = "TravelAgent",
+    Staff = "Staff",
+    Admin = "Admin"
 }
 
 

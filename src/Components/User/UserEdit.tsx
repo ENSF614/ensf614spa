@@ -3,6 +3,7 @@ import {Form, Row, Col, FormGroup, Label, Input, Button} from "reactstrap";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import PageLayout from "../PageLayout";
+import {UserRole} from "../../Auth/authTypes";
 
 
 
@@ -11,18 +12,20 @@ const UserEdit = () => {
     let {userId} = useParams<string>()
     
     const [user, setUser] = useState<User>({
+        email: "",
+        joinedOnDate: "",
         userID: "",
         fName: "",
         lName: "",
         address: "",
         city: "",
         province: "",
-        postalCode: "",
+        postal: "",
         country: "",
         phoneNumber: "",
         companionPass: false,
         loungePass: false,
-        role: 1
+        role: UserRole.None
     })
 
     const handleInputChange = (e: any) => {

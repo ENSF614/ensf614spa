@@ -1,19 +1,26 @@
-import {authorizedGetAsync} from "./apiUtils";
+import {authorizedGetAsync, authorizedPostAsync} from "./apiUtils";
 import {UserRole} from "../Auth/authTypes";
 
 export type User = {
     userID: string
     fName: string
     lName: string
+    email: string
     address: string
     city: string
     province: string
-    postalCode: string
+    postal: string
     country: string
     phoneNumber: string
     companionPass: boolean
     loungePass: boolean
+    joinedOnDate: string
     role: UserRole
+}
+
+export type NewUser = User & {
+    password: string
+
 }
 
 
@@ -23,3 +30,6 @@ export const getUsers = ():Promise<User[]> =>
 
 export const getUser = (userId:string):Promise<User> =>
     authorizedGetAsync<User>( `http://localhost:8080/api/User/getUser/${userId}`)
+
+export const createUser = (newUser:NewUser):Promise<User> =>
+    authorizedPostAsync<User>( `http://localhost:8080/api/User/createUser`, newUser)

@@ -32,7 +32,7 @@ const Flights = () => {
     const handleBookFlightsClick = (flight: Flight) => {
         if(user){
             console.log(flight.flightId)
-            navigate("/SeatMap", {state: {flightID: flight}})
+            navigate("/SeatMap", {state: {flight: flight}})
         }
         else {
             navigate("/login")

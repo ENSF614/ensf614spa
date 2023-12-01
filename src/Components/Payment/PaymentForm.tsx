@@ -5,7 +5,7 @@ import InvalidCardModal from "./invalidCardModal";
 import PaymentConfirmedModal from "./paymentConfirmedModal";
 import { useNavigate } from "react-router-dom";
 import { Seat } from "../../API/seats";
-import { Booking, putBooking } from "../../API/booking";
+import { Booking, putBookings } from "../../API/booking";
 import InvalidBookingModal from "./invalidBookingModal";
 import { useAuth } from "../../Auth/AuthProvider";
 import { User } from "../../API/users";
@@ -266,6 +266,7 @@ const BillingSummaryCard = (props: BillingSummaryProps) => {
 const PaymentForm = () => {
 
     const { state } = useLocation()
+    const navigate = useNavigate()
     const [showInvalidCard, setShowInvalidCard] = useState(false)
     const [showConfirmedPayment, setShowConfirmedPayment] = useState(false)
     const [showInvalidBooking, setShowInvalidBooking] = useState(false)
@@ -276,25 +277,41 @@ const PaymentForm = () => {
     const [cardType, setCardType] = useState<string>("credit")
     const { user } = useAuth();
 
-    const seat = state?.seat
-    const navigate = useNavigate()
+    const seats = state?.seats
 
-    const getSeatType = () => {
+    const getSeatType = (seat: Seat) => {
         if(seat.businessClass) return "business"
         return "economy"
     }
 
+    const makeBookings = () => {
+        let bookings: Booking[] = []
+        for(let seat of seats){
+            bookings.push({
+                userID: (user as User).userID,
+                flightID: seat.flightID,
+                cancelInsurance: cancelInsurance,
+                paid: true,
+                payMethod: cardType,
+                seatClass: getSeatType(seat),
+                seatRow: seat.seatRow,
+                seatCol: seat.seatCol,
+                passengerName: seat.passengerName
+            })
+        }
+        return bookings
+    }
+
+    const getTotalCost = () => {
+        let price = 0
+        for(let seat of seats){
+            price += seat.price
+        }
+        return price
+    }
+
     const passBooking = () => {
-        putBooking({
-            userID: (user as User).userID,
-            flightID: seat.flightID,
-            cancelInsurance: cancelInsurance,
-            paid: true,
-            payMethod: cardType,
-            seatClass: getSeatType(),
-            seatRow: seat.seatRow,
-            seatCol: seat.seatCol
-        })
+        putBookings(makeBookings())
             .then((response) => {
                 console.log(response)
                 if(response) {
@@ -330,7 +347,7 @@ const PaymentForm = () => {
                     />
                 </div>
                 <div className="col-md-4">
-                    <BillingSummaryCard price={seat.price} cancelInsurance={cancelInsurance}/>
+                    <BillingSummaryCard price={getTotalCost()} cancelInsurance={cancelInsurance}/>
                 </div>
             </div>
         </div>

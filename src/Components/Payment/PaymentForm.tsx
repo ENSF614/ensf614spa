@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { Seat } from "../../API/seats";
 import { Booking, putBooking } from "../../API/booking";
 import InvalidBookingModal from "./invalidBookingModal";
+import { useAuth } from "../../Auth/AuthProvider";
+import { User } from "../../API/users";
 
 interface BillingDetailsProps {
     insuranceState: any
@@ -272,6 +274,7 @@ const PaymentForm = () => {
     const [cardExpiry, setCardExpiry] = useState<string>("")
     const [cardCVV, setCardCVV] = useState<string>("")
     const [cardType, setCardType] = useState<string>("credit")
+    const { user } = useAuth();
 
     const seat = state?.seat
     const navigate = useNavigate()
@@ -283,7 +286,7 @@ const PaymentForm = () => {
 
     const passBooking = () => {
         putBooking({
-            userID: 1,
+            userID: (user as User).userID,
             flightID: seat.flightID,
             cancelInsurance: cancelInsurance,
             paid: true,

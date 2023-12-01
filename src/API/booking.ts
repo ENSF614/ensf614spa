@@ -2,7 +2,7 @@ import {authorizedPutAsync} from "./apiUtils";
 
 export type Booking = {
     bookingID?: number
-    userID: number
+    userID: string
     flightID: number
     cancelInsurance: boolean
     paid: boolean

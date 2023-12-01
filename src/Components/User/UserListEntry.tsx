@@ -38,7 +38,7 @@ const UserListEntry:React.FC<Props> = ({
                         {user.city}, {user.province}
                     </div>
                     <div>
-                        {user.postalCode}, {user.country}
+                        {user.postal}, {user.country}
                     </div>
 
                 </div>

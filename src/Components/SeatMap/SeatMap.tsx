@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { Seat, getSeats } from "../../API/seats";
 import { BookingInfo, getBookingInfo } from "../../API/bookingInfo";
 import PageLayout from "../PageLayout";
 import ConfirmSeatModal from "../Payment/ConfirmSeatModal";
 import SeatButton from "./SeatButton";
+import {getSeats, Seat} from "../../API/seats";
 
 interface Props{
     children?: any;

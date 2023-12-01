@@ -5,13 +5,14 @@ import PageLayout from "../PageLayout";
 import ConfirmSeatModal from "../Payment/ConfirmSeatModal";
 import SeatButton from "./SeatButton";
 import {getSeats, Seat} from "../../API/seats";
+import { Flight } from "../../API/flights";
 
 interface Props{
-    children?: any;
+    flight?: Flight
 }
 
 const SeatMap = ({
-    children}:Props) => {
+    flight}:Props) => {
 
     const [seats, setSeats] = useState<Seat[]>()
 

@@ -199,18 +199,13 @@ const BillingDetailsCard = (props: BillingDetailsProps) => {
             </div>   
             <div className="card-body">
                 <InfoSection />
-
                 <hr className="my-4"/>
-
                 <InsuranceSection 
                     insuranceState={props.insuranceState}
                     setInsurance={props.setInsurance}
                 />
-
                 <hr className="my-4" />
-
                 <PaymentSection {...props}/>
-                
                 <div className="d-grid gap-2 col-6 mx-auto">
                 <button type="button" className="btn btn-primary btn-lg shadow mb-3" onClick={validateCard}>
                     CHECKOUT
@@ -331,7 +326,6 @@ const PaymentForm = () => {
                         setCardType={setCardType}
                     />
                 </div>
-
                 <div className="col-md-4">
                     <BillingSummaryCard price={seat.price} cancelInsurance={cancelInsurance}/>
                 </div>

@@ -1,86 +1,71 @@
-import {Form, FormFeedback, FormGroup, FormText, Input, Label} from "reactstrap";
-
+import React, { useState } from 'react';
+import { Form } from "react-bootstrap";
+import { useAuth } from "../../Auth/AuthProvider";
+import PageLayout from "../PageLayout";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Get the from location
+    const {from} = location.state || {from: {pathname: "/"}};
+
+    // State for form inputs
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    // Handle input changes
+    const handleEmailChange = (e:any) =>{
+        e.preventDefault()
+        setEmail(e.target.value);
+    }
+    const handlePasswordChange = (e:any) => {
+        e.preventDefault()
+        setPassword(e.target.value);
+    }
+
+    // Handle form submission
+    const handleSubmit = async (e:any) => {
+        // e.preventDefault(); // Prevents default form submission behavior
+        try {
+            await login({ email, password });
+
+            navigate(from)
+        } catch (error:any) {
+            alert(error.message);
+        }
+    };
+
     return (
-        <Form>
-            <FormGroup>
-                <Label for="exampleEmail">
-                    Input without validation
-                </Label>
-                <Input />
-                <FormFeedback>
-                    You will not be able to see this
-                </FormFeedback>
-                <FormText>
-                    Example help text that remains unchanged.
-                </FormText>
-            </FormGroup>
-            <FormGroup>
-                <Label for="exampleEmail">
-                    Valid input
-                </Label>
-                <Input valid />
-                <FormFeedback valid>
-                    Sweet! that name is available
-                </FormFeedback>
-                <FormText>
-                    Example help text that remains unchanged.
-                </FormText>
-            </FormGroup>
-            <FormGroup>
-                <Label for="examplePassword">
-                    Invalid input
-                </Label>
-                <Input invalid />
-                <FormFeedback>
-                    Oh noes! that name is already taken
-                </FormFeedback>
-                <FormText>
-                    Example help text that remains unchanged.
-                </FormText>
-            </FormGroup>
-            <FormGroup>
-                <Label for="exampleEmail">
-                    Input without validation
-                </Label>
-                <Input />
-                <FormFeedback tooltip>
-                    You will not be able to see this
-                </FormFeedback>
-                <FormText>
-                    Example help text that remains unchanged.
-                </FormText>
-            </FormGroup>
-            <FormGroup className="position-relative">
-                <Label for="exampleEmail">
-                    Valid input
-                </Label>
-                <Input valid />
-                <FormFeedback
-                    tooltip
-                    valid
-                >
-                    Sweet! that name is available
-                </FormFeedback>
-                <FormText>
-                    Example help text that remains unchanged.
-                </FormText>
-            </FormGroup>
-            <FormGroup className="position-relative">
-                <Label for="examplePassword">
-                    Invalid input
-                </Label>
-                <Input invalid />
-                <FormFeedback tooltip>
-                    Oh noes! that name is already taken
-                </FormFeedback>
-                <FormText>
-                    Example help text that remains unchanged.
-                </FormText>
-            </FormGroup>
-        </Form>
-    )
+        <PageLayout>
+            <h2 className="mt-2">Sign In</h2>
+            <Form className="mt-3" onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="formGroupEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
+                        type="email"
+                        placeholder="Enter email"
+                        value={email}
+                        onChange={handleEmailChange}
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formGroupPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={handlePasswordChange}
+                    />
+                </Form.Group>
+                <button type="submit">Log In</button>
+            </Form>
+
+        </PageLayout>
+
+    );
 }
 
-export default LogIn
+export default LogIn;

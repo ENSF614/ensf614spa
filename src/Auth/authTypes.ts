@@ -29,5 +29,5 @@ export class UserRoles {
     static readonly StaffOrBetter = [UserRole.Admin, UserRole.Staff]
     static readonly TravelAgentOrBetter = [UserRole.Admin, UserRole.Staff, UserRole.TravelAgent]
     static readonly RegisteredUserOrBetter = [UserRole.Admin, UserRole.Staff, UserRole.TravelAgent, UserRole.RegisteredUser]
-    static readonly UserOrBetter = [UserRole.Admin, UserRole.User]
+    static readonly UserOrBetter = [UserRole.Admin, UserRole.Staff, UserRole.TravelAgent, UserRole.RegisteredUser, UserRole.User]
 }

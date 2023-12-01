@@ -53,7 +53,7 @@ const App = () => {
           <Routes>
               <Route path="/" Component={Home} />
               <Route path="/login" Component={LogIn} />
-              <Route path="/signup" Component={Home} />
+              <Route path="/signup" Component={SignUp} />
               <Route path="/Flights" Component={Flights} />
               <Route path="/SeatMap" Component={SeatMap} />
               <Route path="/PaymentForm" Component={PaymentForm} />

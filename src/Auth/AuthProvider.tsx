@@ -1,10 +1,11 @@
 import React, {createContext, useState, useEffect, SetStateAction, Dispatch, useCallback, useContext} from 'react';
-import {User} from "../API/users";
+import {SignIn, signInUser, User} from "../API/users";
+import { useNavigate } from 'react-router-dom';
 
 // Create the context
 
 export type AuthContextType = {
-    login: ()=> Promise<void>
+    login: (signInDetail:SignIn)=> Promise<void>
     logout: ()=> Promise<void>
     user: User | undefined
 }
@@ -16,6 +17,7 @@ type Props = {
 }
 
 const AuthProvider:React.FC<Props> = ({children}:Props) => {
+    const navigate = useNavigate();
 
     const [user, setUser] = useState<User|undefined>(undefined)
 
@@ -35,13 +37,27 @@ const AuthProvider:React.FC<Props> = ({children}:Props) => {
 
     }, [user]);
 
-    const login = useCallback(async () => {
+    const login = useCallback(async (signInDetail:SignIn):Promise<void> => {
         // have login logic here
+        if(signInDetail){
+            signInUser(signInDetail)
+                .then((user:User) => {
+                    setUser(user)
+                    console.dir(user)
+                })
+                .catch((error) => {
+                    console.log(error)
+                    alert("Invalid username or password")
+                })
+
+        }
     },[])
 
     const logout = useCallback(async () => {
-        // have login logic here
-    },[])
+        setUser(undefined)
+        localStorage.setItem('fakeAirlineUserData', JSON.stringify(undefined))
+        navigate('/')
+    },[navigate])
 
 
 

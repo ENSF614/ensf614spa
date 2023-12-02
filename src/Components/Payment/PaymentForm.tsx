@@ -1,26 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { CreditCard, checkCard } from "../../API/creditCard"
-import InvalidCardModal from "./invalidCardModal";
-import PaymentConfirmedModal from "./paymentConfirmedModal";
+import { checkCard } from "../../API/creditCard"
+import InvalidCardModal from "../Modals/invalidCardModal";
+import PaymentConfirmedModal from "../Modals/paymentConfirmedModal";
 import { useNavigate } from "react-router-dom";
 import { Seat } from "../../API/seats";
-import { Booking, putBooking } from "../../API/booking";
-import InvalidBookingModal from "./invalidBookingModal";
+import { Booking, putBookings } from "../../API/booking";
+import InvalidBookingModal from "../Modals/invalidBookingModal";
+import { useAuth } from "../../Auth/AuthProvider";
+import { User, updateUser } from "../../API/users";
+import UnableToSendEmailModal from "../Modals/UnableToSendEmailModal";
+import PageLayout from "../PageLayout";
 
 interface BillingDetailsProps {
     insuranceState: any
-    cardNumber: string
-    cardExpiry: string
-    cardCVV: string
+    companionUsed: boolean
     setInsurance: (bool: boolean) => void
     setCardNumber: (num: string) => void
     setCardExpiry: (num: string) => void
     setCardCVV: (num: string) => void
-    setShowInvalidCard: (bool: boolean) => void
-    setShowConfirmedPayment: (bool: boolean) => void
     passBooking: () => void
     setCardType: (card: string) => void
+    setCompanionUsed: (bool: boolean) => void
+    processPayment: () => void
 }
 
 const PaymentSection = (props: BillingDetailsProps) => {
@@ -143,15 +145,22 @@ const InfoSection = () => {
 }
 
 interface InsuranceSectionProps {
-    insuranceState: any
+    insuranceState: boolean
+    companionUsed: boolean
     setInsurance: (bool: boolean) => void
+    setCompanionUsed: (bool: boolean) => void
 }
 
-const InsuranceSection = (props: InsuranceSectionProps) => {
+const InsuranceSection = ({insuranceState, companionUsed, setInsurance, setCompanionUsed}: InsuranceSectionProps) => {
+
+    const { user } = useAuth();
+    console.log("in insurance section")
+    console.log(companionUsed)
+
     return(
       <>
         <div className="form-check">
-            <input className="form-check-input" type="checkbox" value="" id="insurance" onChange={() => props.setInsurance(!props.insuranceState)} />
+            <input className="form-check-input" type="checkbox" value="" id="insurance" onChange={() => setInsurance(!insuranceState)} />
             <label className="form-check-label" htmlFor="insurance">
                 Cancelation insurance
             </label>
@@ -162,35 +171,20 @@ const InsuranceSection = (props: InsuranceSectionProps) => {
                 Shipping address is the same as my billing address
             </label>
         </div>
+        { user?.companionPass && (
+            <div className="form-check">
+                <input className="form-check-input" type="checkbox" value="" id="companionPass" 
+                       onChange={() => setCompanionUsed(!companionUsed)} />
+                <label className="form-check-label" htmlFor="companionPass">
+                    Use companion pass
+                </label>
+            </div>
+        )}
       </>  
     );
 }
 
 const BillingDetailsCard = (props: BillingDetailsProps) => {
-
-    const [cardValidity, setCardValidity] = useState(false);
-
-    const validateCard = () => {
-        setCardValidity(false)
-        checkCard({
-            cardNumber: props.cardNumber,
-            cardExpiry: props.cardExpiry,
-            cardCVV: props.cardCVV
-        })
-            .then((response) => {
-                console.log(response)
-                if(response) {
-                    setCardValidity(true)
-                    props.passBooking()
-                } else {
-                    props.setShowInvalidCard(true)
-                }
-                    
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
 
     return (
         <div className="card shadow">
@@ -199,20 +193,17 @@ const BillingDetailsCard = (props: BillingDetailsProps) => {
             </div>   
             <div className="card-body">
                 <InfoSection />
-
                 <hr className="my-4"/>
-
                 <InsuranceSection 
                     insuranceState={props.insuranceState}
                     setInsurance={props.setInsurance}
+                    companionUsed={props.companionUsed}
+                    setCompanionUsed={props.setCompanionUsed}
                 />
-
                 <hr className="my-4" />
-
                 <PaymentSection {...props}/>
-                
                 <div className="d-grid gap-2 col-6 mx-auto">
-                <button type="button" className="btn btn-primary btn-lg shadow mb-3" onClick={validateCard}>
+                <button type="button" className="btn btn-primary btn-lg shadow mb-3" onClick={props.processPayment}>
                     CHECKOUT
                 </button>
                 </div>
@@ -224,13 +215,21 @@ const BillingDetailsCard = (props: BillingDetailsProps) => {
 interface BillingSummaryProps {
     price: number
     cancelInsurance: boolean
+    companionUsed: boolean
+    companionPrice: number
 }
 
-const BillingSummaryCard = (props: BillingSummaryProps) => {
+const BillingSummaryCard = ({price, 
+                            cancelInsurance, 
+                            companionUsed,
+                            companionPrice}: BillingSummaryProps) => {
 
     let insurancePrice = 0;
-    if (props.cancelInsurance)
+    let companionRefund = 0;
+    if (cancelInsurance)
         insurancePrice = 100;
+    if (companionUsed)
+        companionRefund = companionPrice;
 
     return(
         <div className="card shadow">
@@ -241,7 +240,7 @@ const BillingSummaryCard = (props: BillingSummaryProps) => {
                 <div className="row px-3">
                     <div className="d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                         Ticket
-                        <span>${props.price} CAD</span>
+                        <span>${price} CAD</span>
                     </div>
                 </div>
                 <div className="row px-3">
@@ -252,13 +251,23 @@ const BillingSummaryCard = (props: BillingSummaryProps) => {
                         </span>
                     </div>
                 </div>
+                {companionUsed && 
+                <div className="row px-3">
+                    <div className="d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                        Companion Ticket
+                        <span>
+                            - ${companionRefund} CAD
+                        </span>
+                    </div>
+                </div>
+                }
 
                 <hr className="my-2"></hr>
 
                 <div className="row p-3">
                     <div className="d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                         <strong>Total amount</strong>
-                        <span><strong>${props.price + insurancePrice} CAD</strong></span>
+                        <span><strong>${price + insurancePrice - companionRefund} CAD</strong></span>
                     </div>
                 </div>
             </div>
@@ -269,88 +278,159 @@ const BillingSummaryCard = (props: BillingSummaryProps) => {
 const PaymentForm = () => {
 
     const { state } = useLocation()
+    const navigate = useNavigate()
+    const [cardValidity, setCardValidity] = useState(false)
+    const [emailModal, setEmailModal] = useState(false)
     const [showInvalidCard, setShowInvalidCard] = useState(false)
     const [showConfirmedPayment, setShowConfirmedPayment] = useState(false)
     const [showInvalidBooking, setShowInvalidBooking] = useState(false)
     const [cancelInsurance, setCancelInsurance] = useState(false)
+    const [companionUsed, setCompanionUsed] = useState(false)
     const [cardNumber, setCardNumber] = useState<string>("")
     const [cardExpiry, setCardExpiry] = useState<string>("")
     const [cardCVV, setCardCVV] = useState<string>("")
     const [cardType, setCardType] = useState<string>("credit")
+    const { user } = useAuth();
 
-    const seat = state?.seat
-    const navigate = useNavigate()
+    const seats = state?.seats
 
-    const getSeatType = () => {
+    const getSeatType = (seat: Seat) => {
         if(seat.businessClass) return "business"
         return "economy"
     }
 
-    const passBooking = () => {
-        putBooking({
-            userID: 1,
-            flightID: seat.flightID,
-            cancelInsurance: cancelInsurance,
-            paid: true,
-            payMethod: cardType,
-            seatClass: getSeatType(),
-            seatRow: seat.seatRow,
-            seatCol: seat.seatCol
+    const makeBookings = () => {
+        let bookings: Booking[] = []
+        for(let seat of seats){
+            bookings.push({
+                userID: (user as User).userID,
+                flightID: seat.flightID,
+                cancelInsurance: cancelInsurance,
+                paid: true,
+                payMethod: cardType,
+                seatClass: getSeatType(seat),
+                seatRow: seat.seatRow,
+                seatCol: seat.seatCol,
+                passengerName: seat.passengerName
+            })
+        }
+        return bookings
+    }
+
+    const getTotalCost = () => {
+        let price = 0
+        for(let seat of seats){
+            price += seat.price
+        }
+        return price
+    }
+
+    const passBooking = async ():Promise<string> => {
+        return putBookings(makeBookings())
+    }
+
+    const validateCard = async ():Promise<boolean> => {
+        setCardValidity(false)
+        return checkCard({
+            cardNumber: cardNumber,
+            cardExpiry: cardExpiry,
+            cardCVV: cardCVV
         })
-            .then((response) => {
-                console.log(response)
-                if(response) {
-                    setShowConfirmedPayment(true)
-                } else {
-                    setShowInvalidBooking(true)
-                }
-                    
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+    }
+
+    const updateUserLoungePass = async ():Promise<User> => {
+        if(user!.companionPass){
+            user!.companionPass = !companionUsed
+        }
+        console.log("in update user lounge  pass")
+        console.log(user)
+        return updateUser(user!)
+    }
+
+    const processPayment = async () => {
+        try{
+            let bookingMessage = ""
+            let validated = await validateCard()
+            console.log(validated)
+            if(validated){
+                bookingMessage = await passBooking()
+                console.log("waited for bookings")
+                console.log(bookingMessage)
+            }
+            else {
+                setShowInvalidCard(true)
+                return
+            }
+            if(bookingMessage === "unable to make booking"){
+                console.log("unable to make booking")
+                setShowInvalidBooking(true)
+                return
+            }
+            if(bookingMessage === "unable to send email"){
+                console.log("unable to make booking")
+                setEmailModal(true)
+                return
+            }
+            if(!companionUsed){
+                setShowConfirmedPayment(true)
+                return
+            }
+            else if (await updateUserLoungePass()){
+                setShowConfirmedPayment(true)
+                return
+            }
+        }
+        catch (error: any) {
+            alert(error.message)
+        }
     }
 
     return(
-        <>
-        <div className="container py-5">
-            <div className="row">
-                <div className="col-md-8">
-                    <BillingDetailsCard 
-                        insuranceState={cancelInsurance}
-                        cardNumber={cardNumber}
-                        cardExpiry={cardExpiry}
-                        cardCVV={cardCVV} 
-                        setInsurance={setCancelInsurance}
-                        setCardNumber={setCardNumber}
-                        setCardExpiry={setCardExpiry}
-                        setCardCVV={setCardCVV}
-                        setShowInvalidCard={setShowInvalidCard}
-                        setShowConfirmedPayment={setShowConfirmedPayment}
-                        passBooking={passBooking}
-                        setCardType={setCardType}
-                    />
-                </div>
-
-                <div className="col-md-4">
-                    <BillingSummaryCard price={seat.price} cancelInsurance={cancelInsurance}/>
+        <PageLayout>
+            <div className="container py-5">
+                <div className="row">
+                    <div className="col-md-8">
+                        <BillingDetailsCard 
+                            insuranceState={cancelInsurance}
+                            setInsurance={setCancelInsurance}
+                            setCardNumber={setCardNumber}
+                            setCardExpiry={setCardExpiry}
+                            setCardCVV={setCardCVV}
+                            passBooking={passBooking}
+                            setCardType={setCardType}
+                            setCompanionUsed={setCompanionUsed}
+                            companionUsed={companionUsed}
+                            processPayment={processPayment}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <BillingSummaryCard 
+                            price={getTotalCost()} 
+                            cancelInsurance={cancelInsurance}
+                            companionUsed={companionUsed}
+                            companionPrice={seats[0].price}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <InvalidCardModal 
-            show={showInvalidCard}
-            onHide={() => setShowInvalidCard(false)}    
-        />
-        <PaymentConfirmedModal 
-            show={showConfirmedPayment}
-            onHide={() => navigate("/")}
-        />
-        <InvalidBookingModal 
-            show={showInvalidBooking}
-            onHide={() => navigate("/")}
-        />
-        </>
+            
+            <InvalidCardModal 
+                show={showInvalidCard}
+                onHide={() => setShowInvalidCard(false)}    
+            />
+            <PaymentConfirmedModal 
+                show={showConfirmedPayment}
+                onHide={() => navigate("/")}
+            />
+            <InvalidBookingModal 
+                show={showInvalidBooking}
+                onHide={() => navigate("/")}
+            />
+            <UnableToSendEmailModal 
+                show={emailModal}
+                onHide={() => navigate("/")}
+            />
+        </PageLayout>
     );
 }
 

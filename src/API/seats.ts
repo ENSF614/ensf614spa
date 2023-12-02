@@ -7,6 +7,7 @@ export type Seat = {
     flightID: number
     businessClass: boolean
     price: number
+    passengerName: string
 }
 
 export const getSeats = (flightID: number):Promise<Seat[]> =>

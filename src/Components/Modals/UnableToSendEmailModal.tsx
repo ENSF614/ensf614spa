@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function PaymentConfirmedModal(props: any) {
+function UnableToSendEmailModal(props: any) {
 
     return (
       <Modal
@@ -12,16 +12,12 @@ function PaymentConfirmedModal(props: any) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Payment Confirmed
+            Unable to send confirmation email
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h4>
-            Thank you for booking with ENSF614 Airlines!
-          </h4>
           <p>
-            Confirmation email and ticket have been emailed to 
-            USER EMAIL HERE.
+            Something has gone wrong. Please see a desk agent prior to your flight to receive your tickets
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -31,4 +27,4 @@ function PaymentConfirmedModal(props: any) {
     );
 }
 
-export default PaymentConfirmedModal;
+export default UnableToSendEmailModal;

@@ -2,11 +2,17 @@
 import {Flight, getFlights} from "../API/flights";
 import {useEffect, useState} from "react";
 import PageLayout from "./PageLayout";
-import {Button} from "react-bootstrap";
+import FlightButton from "./FlightButton";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../Auth/AuthProvider";
 
 const Flights = () => {
 
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
     const [flights , setFlights] = useState<Flight[]>()
+    
 
     const loadFlights = () => {
         getFlights()
@@ -22,6 +28,16 @@ const Flights = () => {
     useEffect(() => {
         loadFlights()
     }, [])
+
+    const handleBookFlightsClick = (flight: Flight) => {
+        if(user){
+            console.log(flight.flightId)
+            navigate("/SeatMap", {state: {flight: flight}})
+        }
+        else {
+            navigate("/login")
+        }
+    }
 
 
     return(
@@ -52,13 +68,10 @@ const Flights = () => {
 
                                 </div>
                                 <div className="col">
-                                    <Button>
-                                        <p className="">Book Coach</p>
-
-                                    </Button>
-                                    <Button>
-                                        <p>Business Class</p>
-                                    </Button>
+                                    <FlightButton onClick={handleBookFlightsClick} 
+                                                  flight={flight as Flight}>
+                                        <p className="">Book Flight</p>
+                                    </FlightButton>
                                 </div>
                             </div>
                         </div>

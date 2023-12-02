@@ -41,3 +41,6 @@ export const createUser = (newUser:NewUser):Promise<User> =>
 
 export const signInUser = (signInDetail:SignIn):Promise<User> =>
     authorizedPostAsync<User>( `http://localhost:8080/api/User/login`, signInDetail)
+
+export const updateUser = (user:User):Promise<User> =>
+    authorizedPutAsync<User>( `http://localhost:8080/api/User/updateUser`, user)

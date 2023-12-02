@@ -38,6 +38,11 @@ const LogIn = () => {
         }
     };
 
+    //handle new user signup
+    const handleSignUp = () => {
+        navigate("/signup")
+    }
+
     return (
         <PageLayout>
             <h2 className="mt-2">Sign In</h2>
@@ -61,6 +66,7 @@ const LogIn = () => {
                     />
                 </Form.Group>
                 <button type="submit">Log In</button>
+                <button type="button" onClick={handleSignUp}>Sign Up</button>
             </Form>
 
         </PageLayout>

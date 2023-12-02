@@ -20,7 +20,6 @@ const PageLayout = ({
                     <Nav className='me-auto'>
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href='/Flights'>Flights</Nav.Link>
-                        <Nav.Link href='/SeatMap'>SeatMap</Nav.Link>
                         <NavDropdown title="Someshit" id="navdropdown">
                             <NavDropdown.Item href="#">Book a Flight</NavDropdown.Item>
                             <NavDropdown.Item href="#">Check Flight Status</NavDropdown.Item>
@@ -33,6 +32,7 @@ const PageLayout = ({
                                 <>
                                     <NavDropdown.Item href={`/User/${user.userID}`}>Profile</NavDropdown.Item>
                                     <NavDropdown.Item onClick={logout} >Log Out</NavDropdown.Item>
+                                    <NavDropdown.Item href="/MyFlights">My Flights</NavDropdown.Item>
                                 </>
                             )}
                             {!user && (

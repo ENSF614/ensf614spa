@@ -4,12 +4,23 @@ import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from "react";
 import { Button } from "react-bootstrap";
+import { useNavigate }  from "react-router-dom";
 
 const Home = () => {
 
+    const navigate = useNavigate()
     const [startDate, setStartDate] = useState(new Date())
     const [origin, setOrigin] = useState('')
     const [destination, setDestination] = useState('')
+
+    const handleSearchClick = () => {
+        navigate("/Flights", {
+            state: 
+            {origin: origin,
+             destination: destination,
+             startDate: startDate
+        }})
+    }
 
     return(
         <PageLayout>
@@ -26,7 +37,7 @@ const Home = () => {
             <div className="row mt-5">
                 <div className="col">
                     <h4 className="text-center">
-                        <label htmlFor="origin" className="form-label">Departure</label>
+                        <label htmlFor="origin" className="form-label">*Departure</label>
                     </h4>
                     <div className="d-flex justify-content-center">
                         <input className="form" id="origin" 
@@ -37,11 +48,11 @@ const Home = () => {
                 </div>
                 <div className="col">
                     <h4 className="text-center">
-                        <label htmlFor="destination" className="form-label">Destination</label>
+                        <label htmlFor="destination" className="form-label">*Destination</label>
                     </h4>
                     <div className="d-flex justify-content-center">
                         <input className="form" id="destination" 
-                               type="text" placeholder="Hawaii"
+                               type="text" placeholder="Toronto"
                                onChange={(e) => setDestination(e.target.value)}>
                         </input>
                     </div>
@@ -60,11 +71,14 @@ const Home = () => {
             </div>
             <div className="row mt-5">
                 <div className="col d-flex justify-content-center">
-                    <Button type="button" variant="dark">
+                    <Button type="button" variant="dark" onClick={handleSearchClick}>
                         Take Me Away!
                     </Button>
                 </div>
             </div>
+            <footer>
+                *ENSF614 Airlines only provides flights between major Canadian cities.
+            </footer>
         </PageLayout>
 
     )

@@ -239,7 +239,7 @@ const BillingSummaryCard = ({price,
             <div className="card-body">
                 <div className="row px-3">
                     <div className="d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                        Ticket
+                        Ticket(s)
                         <span>${price} CAD</span>
                     </div>
                 </div>

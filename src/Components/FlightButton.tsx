@@ -11,8 +11,6 @@ interface Props {
 const FlightButton = ({flight, onClick, children}: Props) => {
 
     const [flightState, setFlight] = useState<Flight>(flight)
-    console.log("flight button")
-    console.log(flight)
 
     const handleClick = () => {
         onClick(flightState)

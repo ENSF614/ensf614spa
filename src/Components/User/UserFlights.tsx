@@ -1,9 +1,8 @@
 
-import { Flight, UserFlightInfo, getUserFlightInfo } from "../../API/flights";
+import { UserFlightInfo, getUserFlightInfo } from "../../API/flights";
 import {useEffect, useState} from "react";
 import PageLayout from "../PageLayout";
 import { Button } from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../Auth/AuthProvider";
 import ConfirmCancellationModal from "../Modals/ConfirmCancellationModal";
 import { cancelBooking } from "../../API/booking";
@@ -11,7 +10,6 @@ import { cancelBooking } from "../../API/booking";
 const UserFlights = () => {
 
     const { user } = useAuth();
-    const navigate = useNavigate();
 
     const [flightInfos , setFlightInfos] = useState<UserFlightInfo[]>()
     const [flightInfo , setFlightInfo] = useState<UserFlightInfo>()

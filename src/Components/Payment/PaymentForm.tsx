@@ -325,7 +325,7 @@ const PaymentForm = () => {
         return price
     }
 
-    const passBooking = async ():Promise<boolean> => {
+    const passBooking = async ():Promise<string> => {
         return putBookings(makeBookings())
     }
 
@@ -349,20 +349,26 @@ const PaymentForm = () => {
 
     const processPayment = async () => {
         try{
+            let bookingMessage = ""
             let validated = await validateCard()
             console.log(validated)
             if(validated){
-                validated = await passBooking()
+                bookingMessage = await passBooking()
                 console.log("waited for bookings")
-                console.log(validated)
+                console.log(bookingMessage)
             }
             else {
                 setShowInvalidCard(true)
                 return
             }
-            if(!validated){
-                console.log("unable to make booking or send email")
+            if(bookingMessage == "unable to make booking"){
+                console.log("unable to make booking")
                 setShowInvalidBooking(true)
+                return
+            }
+            if(bookingMessage == "unable to send email"){
+                console.log("unable to make booking")
+                setEmailModal(true)
                 return
             }
             if(!companionUsed){
@@ -373,8 +379,6 @@ const PaymentForm = () => {
                 setShowConfirmedPayment(true)
                 return
             }
-            else
-                setEmailModal(true)
         }
         catch (error: any) {
             alert(error.message)

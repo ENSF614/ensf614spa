@@ -16,5 +16,5 @@ export type Booking = {
 export const putBooking = (message: Booking): Promise<boolean> => 
     authorizedPutAsync<boolean>('http://localhost:8080/api/Booking/putBooking', message)
 
-export const putBookings = (message: Booking[]): Promise<boolean> => 
-    authorizedPutAsync<boolean>('http://localhost:8080/api/Booking/putBookings', message)    
+export const putBookings = (message: Booking[]): Promise<string> => 
+    authorizedPutAsync<string>('http://localhost:8080/api/Booking/putBookings', message)    

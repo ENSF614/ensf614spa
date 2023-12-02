@@ -14,6 +14,7 @@ import {UserRole, UserRoles} from "./Auth/authTypes";
 import LogIn from "./Components/Auth/LogIn";
 import * as claimUtils from "./Auth/claimUtils";
 import SignUp from "./Components/User/SignUp";
+import UserFlights from './Components/User/UserFlights';
 
 
 /**
@@ -60,6 +61,7 @@ const App = () => {
               <Route path="/Users" Component={adminOrBetter(Users)} />
               <Route path="/User/:userId" Component={userOrBetter(UserEdit)} />
               <Route path="/work" Component={SignUp} />
+              <Route path="/MyFlights" Component={userOrBetter(UserFlights)} />
           </Routes>
       </AuthProvider>
 

@@ -3,7 +3,7 @@ import { Button, Card } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BookingInfo, getBookingInfo } from "../../API/bookingInfo";
 import PageLayout from "../PageLayout";
-import ConfirmSeatModal from "../Payment/ConfirmSeatModal";
+import ConfirmSeatModal from "../Modals/ConfirmSeatModal";
 import SeatButton from "./SeatButton";
 import {getSeats, Seat} from "../../API/seats";
 import { Flight } from "../../API/flights";

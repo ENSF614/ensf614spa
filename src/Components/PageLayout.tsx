@@ -32,6 +32,7 @@ const PageLayout = ({
                                 <>
                                     <NavDropdown.Item href={`/User/${user.userID}`}>Profile</NavDropdown.Item>
                                     <NavDropdown.Item onClick={logout} >Log Out</NavDropdown.Item>
+                                    <NavDropdown.Item href="/MyFlights">My Flights</NavDropdown.Item>
                                 </>
                             )}
                             {!user && (

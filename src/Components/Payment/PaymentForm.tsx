@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { CreditCard, checkCard } from "../../API/creditCard"
-import InvalidCardModal from "./invalidCardModal";
-import PaymentConfirmedModal from "./paymentConfirmedModal";
+import { checkCard } from "../../API/creditCard"
+import InvalidCardModal from "../Modals/invalidCardModal";
+import PaymentConfirmedModal from "../Modals/paymentConfirmedModal";
 import { useNavigate } from "react-router-dom";
 import { Seat } from "../../API/seats";
 import { Booking, putBookings } from "../../API/booking";
-import InvalidBookingModal from "./invalidBookingModal";
+import InvalidBookingModal from "../Modals/invalidBookingModal";
 import { useAuth } from "../../Auth/AuthProvider";
 import { User, updateUser } from "../../API/users";
-import UnableToSendEmailModal from "./UnableToSendEmailModal";
+import UnableToSendEmailModal from "../Modals/UnableToSendEmailModal";
+import PageLayout from "../PageLayout";
 
 interface BillingDetailsProps {
     insuranceState: any
@@ -279,7 +280,6 @@ const PaymentForm = () => {
     const { state } = useLocation()
     const navigate = useNavigate()
     const [cardValidity, setCardValidity] = useState(false)
-    const [bookingState, setBookingState] = useState(false)
     const [emailModal, setEmailModal] = useState(false)
     const [showInvalidCard, setShowInvalidCard] = useState(false)
     const [showConfirmedPayment, setShowConfirmedPayment] = useState(false)
@@ -361,12 +361,12 @@ const PaymentForm = () => {
                 setShowInvalidCard(true)
                 return
             }
-            if(bookingMessage == "unable to make booking"){
+            if(bookingMessage === "unable to make booking"){
                 console.log("unable to make booking")
                 setShowInvalidBooking(true)
                 return
             }
-            if(bookingMessage == "unable to send email"){
+            if(bookingMessage === "unable to send email"){
                 console.log("unable to make booking")
                 setEmailModal(true)
                 return
@@ -386,51 +386,51 @@ const PaymentForm = () => {
     }
 
     return(
-        <>
-        <div className="container py-5">
-            <div className="row">
-                <div className="col-md-8">
-                    <BillingDetailsCard 
-                        insuranceState={cancelInsurance}
-                        setInsurance={setCancelInsurance}
-                        setCardNumber={setCardNumber}
-                        setCardExpiry={setCardExpiry}
-                        setCardCVV={setCardCVV}
-                        passBooking={passBooking}
-                        setCardType={setCardType}
-                        setCompanionUsed={setCompanionUsed}
-                        companionUsed={companionUsed}
-                        processPayment={processPayment}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <BillingSummaryCard 
-                        price={getTotalCost()} 
-                        cancelInsurance={cancelInsurance}
-                        companionUsed={companionUsed}
-                        companionPrice={seats[0].price}
-                    />
+        <PageLayout>
+            <div className="container py-5">
+                <div className="row">
+                    <div className="col-md-8">
+                        <BillingDetailsCard 
+                            insuranceState={cancelInsurance}
+                            setInsurance={setCancelInsurance}
+                            setCardNumber={setCardNumber}
+                            setCardExpiry={setCardExpiry}
+                            setCardCVV={setCardCVV}
+                            passBooking={passBooking}
+                            setCardType={setCardType}
+                            setCompanionUsed={setCompanionUsed}
+                            companionUsed={companionUsed}
+                            processPayment={processPayment}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <BillingSummaryCard 
+                            price={getTotalCost()} 
+                            cancelInsurance={cancelInsurance}
+                            companionUsed={companionUsed}
+                            companionPrice={seats[0].price}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <InvalidCardModal 
-            show={showInvalidCard}
-            onHide={() => setShowInvalidCard(false)}    
-        />
-        <PaymentConfirmedModal 
-            show={showConfirmedPayment}
-            onHide={() => navigate("/")}
-        />
-        <InvalidBookingModal 
-            show={showInvalidBooking}
-            onHide={() => navigate("/")}
-        />
-        <UnableToSendEmailModal 
-            show={emailModal}
-            onHide={() => navigate("/")}
-        />
-        </>
+            
+            <InvalidCardModal 
+                show={showInvalidCard}
+                onHide={() => setShowInvalidCard(false)}    
+            />
+            <PaymentConfirmedModal 
+                show={showConfirmedPayment}
+                onHide={() => navigate("/")}
+            />
+            <InvalidBookingModal 
+                show={showInvalidBooking}
+                onHide={() => navigate("/")}
+            />
+            <UnableToSendEmailModal 
+                show={emailModal}
+                onHide={() => navigate("/")}
+            />
+        </PageLayout>
     );
 }
 

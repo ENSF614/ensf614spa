@@ -1,4 +1,4 @@
-import PageLayout from "./PageLayout";
+import PageLayout from "./Layout/PageLayout";
 import "../home.css";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
@@ -9,9 +9,9 @@ import { useNavigate }  from "react-router-dom";
 const Home = () => {
 
     const navigate = useNavigate()
-    const [startDate, setStartDate] = useState(new Date())
-    const [origin, setOrigin] = useState('')
-    const [destination, setDestination] = useState('')
+    const [startDate, setStartDate] = useState<Date|undefined>(undefined)
+    const [origin, setOrigin] = useState<string>('')
+    const [destination, setDestination] = useState<string>('')
 
     const handleSearchClick = () => {
         navigate("/Flights", {

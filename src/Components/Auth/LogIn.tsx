@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form } from "react-bootstrap";
 import { useAuth } from "../../Auth/AuthProvider";
-import PageLayout from "../PageLayout";
+import PageLayout from "../Layout/PageLayout";
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const LogIn = () => {

@@ -40,5 +40,5 @@ export const getFlights = ():Promise<Flight[]> =>
 export const getUserFlightInfo = (userID: string):Promise<UserFlightInfo[]> =>
     authorizedGetAsync<UserFlightInfo[]>(`http://localhost:8080/api/Flight/getFlights/${userID}`)
 
-export const searchFlights = (details: FlightDetail):Promise<Flight[]> =>
+export const getSearchedFlights = (details: FlightDetail):Promise<Flight[]> =>
     authorizedPostAsync<Flight[]>('http://localhost:8080/api/Flight/searchFlights', details)

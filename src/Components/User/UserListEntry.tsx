@@ -1,65 +1,66 @@
 import {User} from "../../API/users";
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useAuth} from "../../Auth/AuthProvider";
+import {isAdmin} from "../../Auth/claimUtils";
 
 
 type Props = {
-    user: User
+    userEntry: User
 }
 
 const UserListEntry:React.FC<Props> = ({
-    user
+    userEntry
 }) => {
 
-    console.dir(user)
+    const { user } = useAuth();
+    const { state } = useLocation();
+    const navigate = useNavigate();
 
+    const handleEditUser = () =>{
+        if(isAdmin(user)){
+            navigate(`/User/${userEntry.userID}`)
+        } else {
+            alert("You do not have permission to edit this user")
+        }
+
+    }
 
     return (
-        <div className="card p-1 mb-1">
-            <div className="row d-flex align-items-center">
-                <div className="col">
+
+            <div onClick={handleEditUser} className="card p-1 mb-1">
+                <div className="row d-flex align-items-center">
+                    <div className="col-4">
 
                         <div className="fw-bold">
-                            {user.fName} {user.lName}
+                            {userEntry.fName} {userEntry.lName}
                         </div>
                         <div className="text-muted">
-                            {user.role}
+                            {userEntry.role}
+                        </div>
+                        <div className="text-muted">
+                            {userEntry.email}
                         </div>
 
-                </div>
-                <div className="col">
-                    EmailHolder
-                </div>
-                <div className="col">
-                    <div>
-                        {user.address}
                     </div>
-                    <div>
-                        {user.city}, {user.province}
+                    <div className="col-4">
+                        <div>
+                            {userEntry.address}
+                        </div>
+                        <div>
+                            {userEntry.city} {userEntry.province}
+                        </div>
+                        <div>
+                            {userEntry.postal} {userEntry.country}
+                        </div>
+
                     </div>
-                    <div>
-                        {user.postal}, {user.country}
+                    <div className="col-4">
+                        {userEntry.phoneNumber}
                     </div>
 
                 </div>
-                <div className="col">
-                    {user.phoneNumber}
-                </div>
-                <div className="col-1">
-                    {user.companionPass ? "Yes" : "No"}
-                </div>
-                <div className="col-1">
-                    {user.loungePass ? "Yes" : "No"}
-                </div>
-                <div className="col-1 fw-bold">
-                    <Link to={`/User/${user.userID}`}>
-                    Edit {user.userID}
-                    </Link>
-                </div>
-
             </div>
-        </div>
-
     )
 }
 

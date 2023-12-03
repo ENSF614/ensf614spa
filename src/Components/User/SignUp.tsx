@@ -1,13 +1,22 @@
-import { createUser, NewUser } from "../../API/users";
+import {createUser, NewUser, SignIn} from "../../API/users";
 import { useState } from "react";
-import PageLayout from "../PageLayout";
+import PageLayout from "../Layout/PageLayout";
 import { UserRole } from "../../Auth/authTypes";
 import { Button, Col, Form, FormControl, FormGroup, FormCheck, FormLabel, Row } from 'react-bootstrap';
+import {useAuth} from "../../Auth/AuthProvider";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const SignUp = () => {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const {from} = location.state || {from: {pathname: "/"}};
+
     const [newUser, setNewUser] = useState<NewUser>({
+        rewardsMember: false,
+        joinedOnDate: null,
         email: "",
-        joinedOnDate: "",
         userID: "",
         fName: "",
         lName: "",
@@ -23,6 +32,7 @@ const SignUp = () => {
         role: UserRole.User
     });
 
+    const {login} = useAuth();
     const [confirmPassword, setConfirmPassword] = useState<string>("");
 
     const handleInputChange = (e: any) => {
@@ -48,11 +58,11 @@ const SignUp = () => {
             [name]: checked ? UserRole.RegisteredUser : UserRole.User,
             companionPass: !!checked,
             loungePass: !!checked,
-            joinedOnDate: checked ? new Date().toISOString().slice(0, 10) : ""
+            joinedOnDate: checked ? new Date() : null
         }));
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async(e: any) => {
         // console.dir(newUser)
         e.preventDefault();
         if (newUser.password !== confirmPassword) {
@@ -60,13 +70,21 @@ const SignUp = () => {
             return;
         }
         createUser(newUser)
-            .then(response => {
+            .then(async response => {
                 console.log(response);
                 alert("User created successfully");
-            }).catch(error => {
-            console.log(error);
-            alert("Error creating user");
+                var loginDetail = {
+                    email: newUser.email,
+                    password: newUser.password
+                } as SignIn
+                await login(loginDetail);
+                navigate(from);
+            })
+            .catch(error => {
+                console.log(error);
+                alert("Error creating user");
         });
+
     };
 
     return (
@@ -210,7 +228,7 @@ const SignUp = () => {
                         <FormCheck
                             id="rewardsEnrollment"
                             name="role"
-                            label="Join Fake Airlines Rewards Program - Gives you access to our exclusive lounges and companion pass."
+                            label="Join ENSF614 Airlines Rewards Program - Gives you access to our exclusive lounges and companion pass."
                             checked={newUser?.role === UserRole.RegisteredUser}
                             onChange={handleRegisterForRewards}
                         />

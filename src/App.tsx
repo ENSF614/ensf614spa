@@ -2,7 +2,7 @@ import React, {ComponentType} from 'react';
 import './App.css';
 
 import {Route, Routes} from 'react-router-dom';
-import Flights from "./Components/Flights";
+import Flights from "./Components/Flights/Flights";
 import Home from "./Components/Home";
 import SeatMap from "./Components/SeatMap/SeatMap";
 import 'bootstrap/dist/css/bootstrap.css'
@@ -15,6 +15,11 @@ import LogIn from "./Components/Auth/LogIn";
 import * as claimUtils from "./Auth/claimUtils";
 import SignUp from "./Components/User/SignUp";
 import UserFlights from './Components/User/UserFlights';
+import AllFlights from "./Components/Flights/AllFlights";
+
+import 'boxicons/css/boxicons.min.css';
+import FlightInfoList from "./Components/FlightInfo/FlightInfoList";
+import PassengerManifest from "./Components/PassengerManifest/PassengerManifest";
 
 
 /**
@@ -56,7 +61,10 @@ const App = () => {
               <Route path="/login" Component={LogIn} />
               <Route path="/signup" Component={SignUp} />
               <Route path="/Flights" Component={Flights} />
+              <Route path="/AllFlights" Component={AllFlights} />
               <Route path="/SeatMap" Component={SeatMap} />
+              <Route path="/FlightInformation" Component={staffOrBetter(FlightInfoList)} />
+              <Route path="/PassengerManifest/:flightId" Component={staffOrBetter(PassengerManifest)} />
               <Route path="/PaymentForm" Component={PaymentForm} />
               <Route path="/Users" Component={adminOrBetter(Users)} />
               <Route path="/User/:userId" Component={userOrBetter(UserEdit)} />

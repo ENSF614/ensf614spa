@@ -10,7 +10,7 @@ import InvalidBookingModal from "../Modals/invalidBookingModal";
 import { useAuth } from "../../Auth/AuthProvider";
 import { User, updateUser } from "../../API/users";
 import UnableToSendEmailModal from "../Modals/UnableToSendEmailModal";
-import PageLayout from "../PageLayout";
+import PageLayout from "../Layout/PageLayout";
 
 interface BillingDetailsProps {
     insuranceState: any

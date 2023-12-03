@@ -1,7 +1,7 @@
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {useAuth} from "../../Auth/AuthProvider";
 import {Link, useLocation} from "react-router-dom";
-import {isAdmin} from "../../Auth/claimUtils";
+import {isAdmin, isStaffOrBetter} from "../../Auth/claimUtils";
 
 interface Props{
     children?: any;
@@ -24,7 +24,11 @@ const PageLayout = ({
                         {isAdmin(user) &&
                             <NavDropdown title="Admin" id="navdropdown">
                                 <NavDropdown.Item href={"/Users"}>Users</NavDropdown.Item>
-                                <NavDropdown.Item href="#">Check Flight Status</NavDropdown.Item>
+                            </NavDropdown>
+                        }
+                        {isStaffOrBetter(user) &&
+                            <NavDropdown title="Flight Control" id="navdropdown">
+                                <NavDropdown.Item href="/FlightInformation">Flight Information</NavDropdown.Item>
                                 <NavDropdown.Item href="#">Cancel Flight</NavDropdown.Item>
                             </NavDropdown>
                         }

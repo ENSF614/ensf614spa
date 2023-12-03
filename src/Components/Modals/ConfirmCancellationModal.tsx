@@ -21,6 +21,14 @@ function ConfirmCancellationModal(props: any) {
             <h4>
               Confirm cancellation of flight {props.flightInfo?.flightNumber} from {props.flightInfo?.origin} to {props.flightInfo?.destination}?
             </h4>
+            {props.flightInfo?.cancelInsurance &&
+                <h3>
+                    You have purchased cancellation insurance for this flight. You will be refunded the full amount of your ticket.
+                </h3>}
+            {!props.flightInfo?.cancelInsurance &&
+                <h6 className="text-danger">
+                    You have NOT purchased cancellation insurance for this flight. You will NOT be refunded the full amount of your ticket.
+                </h6>}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={props.onHide}>Close</Button>

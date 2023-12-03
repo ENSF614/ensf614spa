@@ -5,8 +5,8 @@ export type Flight = {
     flightNo: string
     origin: string
     destination: string
-    departureDateTime: string
-    arrivalDateTime: string
+    departureDateTime: Date
+    arrivalDateTime: Date
     aircraftID: number
     coachSeatPrice: number
     businessSeatPrice: number
@@ -23,8 +23,8 @@ export type UserFlightInfo = {
     flightNumber: string
     origin: string
     destination: string
-    departureDateTime: string
-    arrivalDateTime: string
+    departureDateTime: Date
+    arrivalDateTime: Date
 }
 
 export type FlightDetail = {

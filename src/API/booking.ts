@@ -5,7 +5,7 @@ export type Booking = {
     userID: string
     flightID: number
     cancelInsurance: boolean
-    paid: boolean
+    paid: number
     payMethod: string
     seatClass: string
     seatRow: number

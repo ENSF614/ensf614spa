@@ -217,12 +217,14 @@ interface BillingSummaryProps {
     cancelInsurance: boolean
     companionUsed: boolean
     companionPrice: number
+    setFinalPrice: (price: number) => void
 }
 
 const BillingSummaryCard = ({price, 
                             cancelInsurance, 
                             companionUsed,
-                            companionPrice}: BillingSummaryProps) => {
+                            companionPrice,
+                            setFinalPrice}: BillingSummaryProps) => {
 
     let insurancePrice = 0;
     let companionRefund = 0;
@@ -230,6 +232,8 @@ const BillingSummaryCard = ({price,
         insurancePrice = 100;
     if (companionUsed)
         companionRefund = companionPrice;
+
+    setFinalPrice(price + insurancePrice - companionRefund)
 
     return(
         <div className="card shadow">
@@ -281,6 +285,7 @@ const PaymentForm = () => {
     const navigate = useNavigate()
     const [cardValidity, setCardValidity] = useState(false)
     const [emailModal, setEmailModal] = useState(false)
+    const [finalPrice, setFinalPrice] = useState(0)
     const [showInvalidCard, setShowInvalidCard] = useState(false)
     const [showConfirmedPayment, setShowConfirmedPayment] = useState(false)
     const [showInvalidBooking, setShowInvalidBooking] = useState(false)
@@ -306,7 +311,7 @@ const PaymentForm = () => {
                 userID: (user as User).userID,
                 flightID: seat.flightID,
                 cancelInsurance: cancelInsurance,
-                paid: true,
+                paid: finalPrice,
                 payMethod: cardType,
                 seatClass: getSeatType(seat),
                 seatRow: seat.seatRow,
@@ -409,6 +414,7 @@ const PaymentForm = () => {
                             cancelInsurance={cancelInsurance}
                             companionUsed={companionUsed}
                             companionPrice={seats[0].price}
+                            setFinalPrice={setFinalPrice}
                         />
                     </div>
                 </div>

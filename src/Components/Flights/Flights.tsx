@@ -1,10 +1,10 @@
 
-import {Flight, FlightDetail, getFlights, getSearchedFlights} from "../API/flights";
+import {Flight, FlightDetail, getFlights, getSearchedFlights} from "../../API/flights";
 import {useEffect, useState} from "react";
-import PageLayout from "./PageLayout";
-import FlightButton from "./FlightButton";
+import PageLayout from "../Layout/PageLayout";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from "../Auth/AuthProvider";
+import { useAuth } from "../../Auth/AuthProvider";
+import FlightButton from "./FlightButton";
 
 const Flights = () => {
 
@@ -15,12 +15,12 @@ const Flights = () => {
     const origin:string = state?.origin
     const destination:string = state?.destination
     const departureDateTime:Date = state?.startDate
-    console.log(origin)
-    console.log(destination)
-    console.log(departureDateTime)
+    // console.log(origin)
+    // console.log(destination)
+    // console.log(departureDateTime)
 
-    const [flights , setFlights] = useState<Flight[]>()
-    const [searchFlights, setSearchFlights] = useState<Flight[]>()
+    // const [flights , setFlights] = useState<Flight[]>()
+    const [searchFlights, setSearchFlights] = useState<Flight[]>([])
 
 
 
@@ -32,7 +32,7 @@ const Flights = () => {
         } as FlightDetail
         getSearchedFlights(search)
             .then((response) => {
-                console.log(response)
+                // console.log(response)
                 setSearchFlights(response)
             })
             .catch((error:Error) => {
@@ -63,9 +63,8 @@ const Flights = () => {
                     </div>
 
                 </div>
-                {origin ? 
-                (searchFlights && (searchFlights.length > 0 ? searchFlights.map((flight) => (
-                    <div className="card mb-2">
+                {searchFlights && (searchFlights.length > 0 ? searchFlights.map((flight) => (
+                    <div key={flight.flightId} className="card mb-2">
                         <div className="card-header">
                             <h5>{flight.flightNo}</h5>
                         </div>
@@ -95,41 +94,12 @@ const Flights = () => {
                 :
                     <div className="card mb-2">
                         <div className="card-header">
-                            <h5>No Flights Available from {origin} to {destination} on {departureDateTime.toISOString().split('T')[0]}</h5>
+                            <h5>No Flights Available from {origin} to {destination} on {new Date(departureDateTime).toLocaleDateString()}</h5>
                         </div>
                         <div className="card-body">
                         </div>
                     </div>
-                ))
-                :
-                (flights && flights.map((flight) => (
-                    <div className="card mb-2">
-                        <div className="card-header">
-                            <h5>{flight.flightNo}</h5>
-                        </div>
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col">
-                                    <h6>Origin</h6>
-                                    <p>{flight.origin}</p>
-                                    <p>{new Date(flight.departureDateTime).toLocaleString()}</p>
-                                </div>
-                                <div className="col">
-                                    <h6>Destination</h6>
-                                    <p>{flight.destination}</p>
-                                    <p>{new Date(flight.arrivalDateTime).toLocaleString()}</p>
-
-                                </div>
-                                <div className="col">
-                                    <FlightButton onClick={handleBookFlightsClick} 
-                                                  flight={flight as Flight}>
-                                        <p className="">Book Flight</p>
-                                    </FlightButton>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )))}
+                )}
             </div>
 
         </PageLayout>

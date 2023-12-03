@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import { Button, Card } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BookingInfo, getBookingInfo } from "../../API/bookingInfo";
-import PageLayout from "../PageLayout";
+import PageLayout from "../Layout/PageLayout";
 import ConfirmSeatModal from "../Modals/ConfirmSeatModal";
 import SeatButton from "./SeatButton";
 import {getSeats, Seat} from "../../API/seats";

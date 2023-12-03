@@ -1,7 +1,7 @@
 
 import { UserFlightInfo, getUserFlightInfo } from "../../API/flights";
 import {useEffect, useState} from "react";
-import PageLayout from "../PageLayout";
+import PageLayout from "../Layout/PageLayout";
 import { Button } from "react-bootstrap";
 import { useAuth } from "../../Auth/AuthProvider";
 import ConfirmCancellationModal from "../Modals/ConfirmCancellationModal";

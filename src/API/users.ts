@@ -6,6 +6,8 @@ export type User = {
     fName: string
     lName: string
     email: string
+    password: string
+    rewardsMember: boolean
     address: string
     city: string
     province: string
@@ -14,7 +16,7 @@ export type User = {
     phoneNumber: string
     companionPass: boolean
     loungePass: boolean
-    joinedOnDate: string
+    joinedOnDate: Date | null
     role: UserRole
 }
 

@@ -1,6 +1,7 @@
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
-import {useAuth} from "../Auth/AuthProvider";
+import {useAuth} from "../../Auth/AuthProvider";
 import {Link, useLocation} from "react-router-dom";
+import {isAdmin} from "../../Auth/claimUtils";
 
 interface Props{
     children?: any;
@@ -19,12 +20,14 @@ const PageLayout = ({
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='me-auto'>
                         <Nav.Link href="/">Home</Nav.Link>
-                        <Nav.Link href='/Flights'>Flights</Nav.Link>
-                        <NavDropdown title="Someshit" id="navdropdown">
-                            <NavDropdown.Item href="#">Book a Flight</NavDropdown.Item>
-                            <NavDropdown.Item href="#">Check Flight Status</NavDropdown.Item>
-                            <NavDropdown.Item href="#">Cancel Flight</NavDropdown.Item>
-                        </NavDropdown>
+                        <Nav.Link href='/AllFlights'>Flights</Nav.Link>
+                        {isAdmin(user) &&
+                            <NavDropdown title="Admin" id="navdropdown">
+                                <NavDropdown.Item href={"/Users"}>Users</NavDropdown.Item>
+                                <NavDropdown.Item href="#">Check Flight Status</NavDropdown.Item>
+                                <NavDropdown.Item href="#">Cancel Flight</NavDropdown.Item>
+                            </NavDropdown>
+                        }
                     </Nav>
                     <Nav>
                         <NavDropdown className="align-items-end me-5" title={user ? `${user.fName} ${user.lName}` : "Sign In"} id="nav-dropdown-user">

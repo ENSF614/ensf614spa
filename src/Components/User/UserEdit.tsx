@@ -1,19 +1,25 @@
-import {getUser, User} from "../../API/users";
+import {createUser, getUser, NewUser, updateUser, User} from "../../API/users";
 import {Form, Row, Col, FormGroup, Label, Input, Button} from "reactstrap";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import PageLayout from "../PageLayout";
+import PageLayout from "../Layout/PageLayout";
 import {UserRole} from "../../Auth/authTypes";
+import {FormCheck, FormControl, FormLabel} from "react-bootstrap";
+import {isAdmin} from "../../Auth/claimUtils";
+import {useAuth} from "../../Auth/AuthProvider";
 
 
 
 const UserEdit = () => {
 
     let {userId} = useParams<string>()
+    let {user} = useAuth()
     
-    const [user, setUser] = useState<User>({
+    const [editableUser, setEditableUser] = useState<User>({
+        rewardsMember: false,
+        password: "",
         email: "",
-        joinedOnDate: "",
+        joinedOnDate: null,
         userID: "",
         fName: "",
         lName: "",
@@ -30,10 +36,57 @@ const UserEdit = () => {
 
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
-        setUser((prevUser) => ({
+        setEditableUser((prevUser) => ({
             ...prevUser,
             [name]: value
         }));
+    };
+
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    const handleRegisterForRewards = (e: any) => {
+        e.preventDefault();
+        const { name, checked } = e.target;
+        setEditableUser(prevUser => ({
+            ...prevUser,
+            [name]: checked ? UserRole.RegisteredUser : UserRole.User,
+            companionPass: !!checked,
+            loungePass: !!checked,
+        }));
+    };
+
+    const handleConfirmPasswordChange = (e: any) => {
+        e.preventDefault();
+        const { value } = e.target;
+        setConfirmPassword(value);
+    };
+
+    const handlePasswordChange = (e: any) => {
+        e.preventDefault();
+        const { value } = e.target;
+        setPassword(value);
+    };
+
+    const handleSubmit = (e: any) => {
+        // console.dir(newUser)
+        e.preventDefault();
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
+        const newUser: NewUser = {
+            ...editableUser,
+            password: password
+        }
+        updateUser(newUser)
+            .then(response => {
+                console.log(response);
+                alert("User created successfully");
+            }).catch(error => {
+            console.log(error);
+            alert("Error creating user");
+        });
     };
 
     
@@ -43,141 +96,213 @@ const UserEdit = () => {
             getUser(userId)
                 .then((response) => {
                     console.log(response)
-                    setUser(response)
+                    setEditableUser(response)
                 })
                 .catch(error =>{
                     console.log(error)
                 })
         }
     },[userId] )
-    
-    
-    return(
+
+
+    return (
         <PageLayout>
+            <h2 className="mt-3">Update User Profile</h2>
             <div className="container mt-5">
                 <Form>
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="fName">
-                                    First Name
-                                </Label>
-                                <Input
+                                <FormLabel htmlFor="fName">First Name</FormLabel>
+                                <FormControl
                                     id="fName"
                                     name="fName"
-                                    placeholder="with a placeholder"
                                     type="text"
-                                    value={user?.fName || ""}
+                                    value={editableUser.fName || ""}
                                     onChange={handleInputChange}
                                 />
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="lName">
-                                    Last Name
-                                </Label>
-                                <Input
+                                <FormLabel htmlFor="lName">Last Name</FormLabel>
+                                <FormControl
                                     id="lName"
                                     name="lName"
-                                    placeholder="with a placeholder"
-                                    type="email"
-                                    value={user?.lName || ""}
+                                    type="text"
+                                    value={editableUser.lName || ""}
                                     onChange={handleInputChange}
                                 />
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="examplePassword">
-                                    Password
-                                </Label>
-                                <Input
-                                    id="examplePassword"
+                                <FormLabel htmlFor="password">Password</FormLabel>
+                                <FormControl
+                                    id="password"
                                     name="password"
-                                    placeholder="password placeholder"
                                     type="password"
+                                    value={password || ""}
+                                    onChange={handlePasswordChange}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col md={6}>
+                            <FormGroup>
+                                <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                                <FormControl
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    value={confirmPassword || ""}
+                                    onChange={handleConfirmPasswordChange}
+                                />
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <FormGroup>
+                                <FormLabel htmlFor="email">E-mail</FormLabel>
+                                <FormControl
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={editableUser.email || ""}
+                                    onChange={handleInputChange}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col md={6}>
+                            <FormGroup>
+                                <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
+                                <FormControl
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    type="text"
+                                    value={editableUser.phoneNumber || ""}
+                                    onChange={handleInputChange}
                                 />
                             </FormGroup>
                         </Col>
                     </Row>
                     <FormGroup>
-                        <Label for="exampleAddress">
-                            Address
-                        </Label>
-                        <Input
-                            id="exampleAddress"
+                        <FormLabel htmlFor="address">Address</FormLabel>
+                        <FormControl
+                            id="address"
                             name="address"
                             placeholder="1234 Main St"
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="exampleAddress2">
-                            Address 2
-                        </Label>
-                        <Input
-                            id="exampleAddress2"
-                            name="address2"
-                            placeholder="Apartment, studio, or floor"
+                            value={editableUser.address || ""}
+                            onChange={handleInputChange}
                         />
                     </FormGroup>
                     <Row>
-                        <Col md={6}>
+                        <Col md={4}>
                             <FormGroup>
-                                <Label for="exampleCity">
-                                    City
-                                </Label>
-                                <Input
-                                    id="exampleCity"
+                                <FormLabel htmlFor="city">City</FormLabel>
+                                <FormControl
+                                    id="city"
                                     name="city"
+                                    value={editableUser.city || ""}
+                                    onChange={handleInputChange}
                                 />
                             </FormGroup>
                         </Col>
-                        <Col md={4}>
+                        <Col md={3}>
                             <FormGroup>
-                                <Label for="exampleState">
-                                    State
-                                </Label>
-                                <Input
-                                    id="exampleState"
-                                    name="state"
+                                <FormLabel htmlFor="province">Province</FormLabel>
+                                <FormControl
+                                    id="province"
+                                    name="province"
+                                    value={editableUser.province || ""}
+                                    onChange={handleInputChange}
                                 />
                             </FormGroup>
                         </Col>
                         <Col md={2}>
                             <FormGroup>
-                                <Label for="exampleZip">
-                                    Zip
-                                </Label>
-                                <Input
-                                    id="exampleZip"
-                                    name="zip"
+                                <FormLabel htmlFor="postal">Postal Code / Zip</FormLabel>
+                                <FormControl
+                                    id="postal"
+                                    name="postal"
+                                    value={editableUser.postal || ""}
+                                    onChange={handleInputChange}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col md={3}>
+                            <FormGroup>
+                                <FormLabel htmlFor="country">Country</FormLabel>
+                                <FormControl
+                                    id="country"
+                                    name="country"
+                                    value={editableUser.country || ""}
+                                    onChange={handleInputChange}
                                 />
                             </FormGroup>
                         </Col>
                     </Row>
-                    <FormGroup check>
-                        <Input
-                            id="exampleCheck"
-                            name="check"
-                            type="checkbox"
-                        />
-                        <Label
-                            check
-                            for="exampleCheck"
-                        >
-                            Check me out
-                        </Label>
-                    </FormGroup>
-                    <Button>
-                        Sign in
+                    {!editableUser.joinedOnDate &&
+                        <FormGroup>
+                            <FormCheck
+                                id="rewardsEnrollment"
+                                name="role"
+                                label="Join ENSF 614 Rewards Program - Gives you access to our exclusive lounges and companion pass."
+                                checked={editableUser.role === UserRole.RegisteredUser}
+                                onChange={handleRegisterForRewards}
+                            />
+                        </FormGroup>
+                    }
+                    <div>
+                        {editableUser.joinedOnDate && <p>
+                            Joined ENSF614 Airlines Rewards on {new Date(editableUser.joinedOnDate).toLocaleDateString()}
+                        </p>}
+                    </div>
+                    <div>
+                        {editableUser.loungePass && <p>
+                            You have one pass to our exclusive lounges.
+                        </p>}
+                    </div>
+                    <div>
+                        {editableUser.companionPass && <p>
+                            You have a companion pass available.
+                        </p>}
+                    </div>
+                    {isAdmin(user) && editableUser.userID!==userId &&
+                        <FormGroup>
+                            <FormCheck
+                                id="rewardsEnrollment"
+                                name="role"
+                                label="Join ENSF 614 Rewards Program - Gives you access to our exclusive lounges and companion pass."
+                                checked={editableUser.role === UserRole.RegisteredUser}
+                                onChange={handleRegisterForRewards}
+                            />
+                            <FormCheck
+                                id="companionPass"
+                                name="companionPass"
+                                label="Companion Pass"
+                                checked={editableUser?.companionPass}
+                                onChange={handleInputChange}
+                            />
+                            <FormCheck
+                                id="loungePass"
+                                name="loungePass"
+                                label="Lounge Pass"
+                                checked={editableUser?.loungePass}
+                                onChange={handleInputChange}
+                            />
+                        </FormGroup>
+                    }
+                    <Button
+                        className="offset-11"
+                        onClick={handleSubmit}
+                    >
+                        Update
                     </Button>
                 </Form>
             </div>
-
         </PageLayout>
-
-    )
+    );
 }
 
 export default UserEdit

@@ -1,5 +1,5 @@
 import { Button } from "react-bootstrap";
-import { Flight } from "../API/flights";
+import { Flight } from "../../API/flights";
 import { useState } from "react";
 
 interface Props {

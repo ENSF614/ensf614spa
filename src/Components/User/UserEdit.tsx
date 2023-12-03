@@ -38,6 +38,7 @@ const UserEdit = () => {
 
     
     useEffect(()=>{
+        console.log(userId)
         if(userId){
             getUser(userId)
                 .then((response) => {
@@ -48,7 +49,7 @@ const UserEdit = () => {
                     console.log(error)
                 })
         }
-    }, [userId])
+    },[userId] )
     
     
     return(

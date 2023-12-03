@@ -1,5 +1,5 @@
 
-import {Flight, getFlights} from "../API/flights";
+import {Flight, FlightDetail, getFlights, getSearchedFlights} from "../API/flights";
 import {useEffect, useState} from "react";
 import PageLayout from "./PageLayout";
 import FlightButton from "./FlightButton";
@@ -12,53 +12,37 @@ const Flights = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
 
-    const origin = state?.origin
-    const destination = state?.destination
-    const departureDateTime = state?.startDate
+    const origin:string = state?.origin
+    const destination:string = state?.destination
+    const departureDateTime:Date = state?.startDate
     console.log(origin)
     console.log(destination)
     console.log(departureDateTime)
 
     const [flights , setFlights] = useState<Flight[]>()
     const [searchFlights, setSearchFlights] = useState<Flight[]>()
-    
-    console.log(origin)
 
-    const findSearchedFlights = () => {
-        console.log(`search flights origin: ${origin}`)
-        if (origin != undefined){
-            let chosenFlights: Flight[] = []
-            console.log("search flights run")
-            console.log(flights)
-            for(const flight of flights!){
-                let flightDateOnly = flight.departureDateTime.toString().split('T')[0]
-                let dateOnly = departureDateTime.toISOString().split('T')[0]
-                if(flight.origin === origin 
-                    && flight.destination === destination
-                    && flightDateOnly === dateOnly){
-                        chosenFlights.push(flight)
-                        console.log(flightDateOnly)
-                        console.log(dateOnly)
-                }
-            }
-            console.log(chosenFlights)
-            setSearchFlights(chosenFlights)
-        }
-    }
 
-    const loadFlights = async () => {
-        try {
-            let response = await getFlights()
-            setFlights(response)
-            findSearchedFlights()
-        }
-        catch (e) {
-            console.log(e)
-        }
+
+    const handleSearchFlightsClick = () => {
+        var search =  {
+            origin: origin,
+            destination: destination,
+            departureDateTime: departureDateTime
+        } as FlightDetail
+        getSearchedFlights(search)
+            .then((response) => {
+                console.log(response)
+                setSearchFlights(response)
+            })
+            .catch((error:Error) => {
+                console.log(error)
+                alert(error.message)
+            })
     }
 
     useEffect(() => {
-        loadFlights()
+        handleSearchFlightsClick()
     }, [])
 
     const handleBookFlightsClick = (flight: Flight) => {

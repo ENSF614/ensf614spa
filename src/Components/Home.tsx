@@ -69,7 +69,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <div className="row mt-5">
+            <div className="row mt-5 mb-5">
                 <div className="col d-flex justify-content-center">
                     <Button type="button" variant="dark" onClick={handleSearchClick}>
                         Take Me Away!
@@ -77,7 +77,9 @@ const Home = () => {
                 </div>
             </div>
             <footer>
+                <p className="text-center">
                 *ENSF614 Airlines only provides flights between major Canadian cities.
+                </p>
             </footer>
         </PageLayout>
 

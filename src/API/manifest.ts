@@ -1,31 +1,20 @@
 import {Flight} from "./flights";
 import {authorizedGetAsync} from "./apiUtils";
 import {Booking} from "./booking";
-import {User} from "./users";
+import {AssignedUser, User} from "./users";
+import {AircraftType} from "./aircraft";
 
 export type FlightManifest = {
     flight: Flight
     capacity: number
     booked: number
     bookings: Booking[]
-    aircraft: Aircraft
-    pilots: User[]
-    flightAttendants: User[]
+    aircraft: AircraftType
+    pilots: AssignedUser[]
+    flightAttendants: AssignedUser[]
 }
 
-export type Aircraft = {
-    aircraftID: number,
-    rowNums: number,
-    colNums: number,
-    capacity: number,
-    name: string,
-    type: string,
-    pilotNum: number,
-    crewNum: number,
-    cycles: number,
-    hours: number,
-    numBusinessRows: number,
-}
+
 
 
 export const getManifests = ():Promise<FlightManifest[]> =>

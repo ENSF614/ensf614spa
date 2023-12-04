@@ -25,6 +25,12 @@ export type NewUser = User & {
 
 }
 
+export type AssignedUser = User & {
+    position: string
+    flightId: number
+    crewAssignmentId: number
+}
+
 export type SignIn = {
     email: string
     password: string

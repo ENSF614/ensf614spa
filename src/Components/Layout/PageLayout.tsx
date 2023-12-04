@@ -29,7 +29,7 @@ const PageLayout = ({
                         {isStaffOrBetter(user) &&
                             <NavDropdown title="Flight Control" id="navdropdown">
                                 <NavDropdown.Item href="/FlightInformation">Flight Information</NavDropdown.Item>
-                                <NavDropdown.Item href="#">Cancel Flight</NavDropdown.Item>
+                                <NavDropdown.Item href="/Aircraft">Aircraft Information</NavDropdown.Item>
                             </NavDropdown>
                         }
                     </Nav>

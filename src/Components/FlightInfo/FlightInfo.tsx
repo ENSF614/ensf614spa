@@ -53,7 +53,7 @@ const FlightInfo:React.FC<Props> = ({
                     <i onClick={() => navigate(`/PassengerManifest/${flight.flightId}`)} className='bx bx-male-female bx-lg'></i>
                 </div>
                 <div className="col-2">
-                    <i className='bx bx-group bx-lg'></i>
+                    <i onClick={() => navigate(`/Crew/${flight.flightId}`)} className='bx bx-group bx-lg'></i>
                 </div>
 
             </div>

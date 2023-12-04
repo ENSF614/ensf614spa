@@ -1,5 +1,17 @@
 import {createUser, getUser, NewUser, updateUser, User} from "../../API/users";
-import {Form, Row, Col, FormGroup, Label, Input, Button} from "reactstrap";
+import {
+    Form,
+    Row,
+    Col,
+    FormGroup,
+    Label,
+    Input,
+    Button,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
+} from "reactstrap";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import PageLayout from "../Layout/PageLayout";
@@ -7,6 +19,7 @@ import {UserRole} from "../../Auth/authTypes";
 import {FormCheck, FormControl, FormLabel} from "react-bootstrap";
 import {isAdmin} from "../../Auth/claimUtils";
 import {useAuth} from "../../Auth/AuthProvider";
+
 
 
 
@@ -31,7 +44,7 @@ const UserEdit = () => {
         phoneNumber: "",
         companionPass: false,
         loungePass: false,
-        role: UserRole.None
+        role: UserRole.User
     })
 
     const handleInputChange = (e: any) => {
@@ -44,6 +57,18 @@ const UserEdit = () => {
 
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggleDropdown = () => setDropdownOpen(prevState => !prevState);
+
+    const handleDropdownChange = (role:UserRole) => {
+
+        setEditableUser(prevUser => ({
+            ...prevUser,
+            role: role // Assuming the field in your form is named 'userRole'
+        }));
+    };
 
     const handleRegisterForRewards = (e: any) => {
         e.preventDefault();
@@ -274,7 +299,7 @@ const UserEdit = () => {
                                 id="rewardsEnrollment"
                                 name="role"
                                 label="Join ENSF 614 Rewards Program - Gives you access to our exclusive lounges and companion pass."
-                                checked={editableUser.role === UserRole.RegisteredUser}
+                                checked={editableUser.role != UserRole.User}
                                 onChange={handleRegisterForRewards}
                             />
                             <FormCheck
@@ -291,6 +316,19 @@ const UserEdit = () => {
                                 checked={editableUser?.loungePass}
                                 onChange={handleInputChange}
                             />
+                            <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+                                <DropdownToggle caret>
+                                    {editableUser?.role || "Select Role"}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    {Object.values(UserRole).map((role) => (
+                                        <DropdownItem key={role} onClick={() => handleDropdownChange(role)}>
+                                            {role}
+                                        </DropdownItem>
+                                    ))}
+                                </DropdownMenu>
+
+                            </Dropdown>
                         </FormGroup>
                     }
                     <Button

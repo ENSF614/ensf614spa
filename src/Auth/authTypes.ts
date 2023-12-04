@@ -15,7 +15,6 @@ export enum UserRole {
     TravelAgent = 'TravelAgent',
     RegisteredUser = 'RegisteredUser',
     User = 'User',
-    None = 'None'
 }
 
 

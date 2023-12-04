@@ -16,10 +16,14 @@ import * as claimUtils from "./Auth/claimUtils";
 import SignUp from "./Components/User/SignUp";
 import UserFlights from './Components/User/UserFlights';
 import AllFlights from "./Components/Flights/AllFlights";
-
-import 'boxicons/css/boxicons.min.css';
 import FlightInfoList from "./Components/FlightInfo/FlightInfoList";
+import 'boxicons/css/boxicons.min.css';
+
+import AircraftList from "./Components/Aircraft/AircraftList";
 import PassengerManifest from "./Components/PassengerManifest/PassengerManifest";
+import AircraftListItem from "./Components/Aircraft/AircraftListItem";
+import AircraftDetail from "./Components/Aircraft/AircraftDetail";
+import CrewAssignment from "./Components/Crew/CrewAssignment";
 
 
 /**
@@ -64,8 +68,11 @@ const App = () => {
               <Route path="/AllFlights" Component={AllFlights} />
               <Route path="/SeatMap" Component={SeatMap} />
               <Route path="/FlightInformation" Component={staffOrBetter(FlightInfoList)} />
-              <Route path="/PassengerManifest/:flightId" Component={staffOrBetter(PassengerManifest)} />
+              <Route path="/PassengerManifest/:flightId" Component={travelAgentOrBetter(PassengerManifest)} />
               <Route path="/PaymentForm" Component={PaymentForm} />
+              <Route path="/Aircraft" Component={staffOrBetter(AircraftList)} />
+              <Route path="/Aircraft/:aircraftId" Component={staffOrBetter(AircraftDetail)} />
+              <Route path="/Crew/:flightId" Component={staffOrBetter(CrewAssignment)} />
               <Route path="/Users" Component={adminOrBetter(Users)} />
               <Route path="/User/:userId" Component={userOrBetter(UserEdit)} />
               <Route path="/work" Component={SignUp} />
